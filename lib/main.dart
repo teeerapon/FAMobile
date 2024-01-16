@@ -4,12 +4,12 @@ import 'dart:async';
 
 import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:new_flutter_test/service/shared_service.dart';
-import 'package:new_flutter_test/sceen/login_sceen.dart';
+import 'package:fa_mobile_app/service/shared_service.dart';
+import 'package:fa_mobile_app/sceen/login_sceen.dart';
 import 'sceen/permission_branch.dart';
 import 'sceen/false_update.dart';
 import 'package:new_version/new_version.dart';
-import 'package:new_flutter_test/updatedialog.dart';
+import 'package:fa_mobile_app/updatedialog.dart';
 
 // Widget _defaultHome = const LohinSceen();
 Widget _defaultHome = const LohinSceen();
@@ -17,8 +17,8 @@ Widget _defaultHome = const LohinSceen();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  bool _result = await SharedService.isLoggedIn();
-  if (_result) {
+  bool? result = await SharedService.isLoggedIn();
+  if (result) {
     // _defaultHome = const LohinSceen();
     _defaultHome = const PermissionBranch();
   }
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
     // Instantiate NewVersion manager object (Using GCP Console app as example)
     final newVersion = NewVersion(
-      androidId: 'com.purethai.fa_counting_test',
+      androidId: 'com.purethai.fa_mobile_app',
     );
 
     Timer(const Duration(milliseconds: 800), () {

@@ -1,9 +1,9 @@
 // ignore_for_file: unrelated_type_equality_checks, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:new_flutter_test/config.dart';
-import 'package:new_flutter_test/models/login_request_model.dart';
-import 'package:new_flutter_test/service/api_service.dart';
+import 'package:fa_mobile_app/config.dart';
+import 'package:fa_mobile_app/models/login_request_model.dart';
+import 'package:fa_mobile_app/service/api_service.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
@@ -31,7 +31,7 @@ class _LohinSceenState extends State<LohinSceen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Version 1.2.6 (2022-12-06)',
+                'Version 1.0.1 (2024-01-10)',
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.black.withOpacity(0.6),
@@ -45,13 +45,13 @@ class _LohinSceenState extends State<LohinSceen> {
         ),
         backgroundColor: HexColor('#283B71'),
         body: ProgressHUD(
+          inAsyncCall: isAPIcallProcess,
+          opacity: 0,
+          key: UniqueKey(),
           child: Form(
             key: globalFormkey,
             child: _loginUI(context),
           ),
-          inAsyncCall: isAPIcallProcess,
-          opacity: 0,
-          key: UniqueKey(),
         ),
       ),
     );
@@ -112,7 +112,6 @@ class _LohinSceenState extends State<LohinSceen> {
             padding: const EdgeInsets.only(left: 8, right: 8),
             child: FormHelper.inputFieldWidget(
               context,
-              const Icon(Icons.person),
               "UserCode",
               "UserCode",
               (onValidateVal) {
@@ -121,10 +120,12 @@ class _LohinSceenState extends State<LohinSceen> {
                 }
                 return null;
               },
-              (onSavedVal) {
-                userCode = onSavedVal;
+              (onSavedVal) => {
+                userCode = onSavedVal,
               },
               borderColor: Colors.white,
+              showPrefixIcon: true,
+              prefixIcon: const Icon(Icons.person),
               prefixIconColor: Colors.white,
               borderFocusColor: Colors.white,
               textColor: Colors.white,
@@ -135,19 +136,20 @@ class _LohinSceenState extends State<LohinSceen> {
             padding: const EdgeInsets.only(top: 10, left: 8, right: 8),
             child: FormHelper.inputFieldWidget(
               context,
-              const Icon(Icons.lock_sharp),
               "password",
               "password",
               (onValidateVal) {
                 if (onValidateVal.isEmpty) {
-                  return "กรุณากรอก password";
+                  return "กรุณากรอก UserCode";
                 }
                 return null;
               },
-              (onSavedVal) {
-                password = onSavedVal;
+              (onSavedVal) => {
+                password = onSavedVal,
               },
               borderColor: Colors.white,
+              showPrefixIcon: true,
+              prefixIcon: const Icon(Icons.password),
               prefixIconColor: Colors.white,
               borderFocusColor: Colors.white,
               textColor: Colors.white,

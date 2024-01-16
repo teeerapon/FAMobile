@@ -21,7 +21,7 @@ class _FalseUpdateState extends State<FalseUpdate> {
   String? password;
 
   final _faChecker = AppVersionChecker(
-    appId: "com.purethai.fa_counting_test",
+    appId: "com.purethai.fa_mobile_app",
     androidStore: AndroidStore.googlePlayStore,
   );
   String? appURL;

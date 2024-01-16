@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:new_flutter_test/sceen/check_code.dart';
-import 'package:new_flutter_test/service/shared_service.dart';
+import 'package:fa_mobile_app/sceen/check_code.dart';
+import 'package:fa_mobile_app/service/shared_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';

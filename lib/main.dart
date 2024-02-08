@@ -37,46 +37,46 @@ class _MyAppState extends State<MyApp> {
   bool isAPIcallProcess = false;
   GlobalKey<FormState> globalFormkey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
+//   @override
+//   void initState() {
+//     super.initState();
 
-    // Instantiate NewVersion manager object (Using GCP Console app as example)
-    final newVersion = NewVersion(
-      androidId: 'com.purethai.fa_mobile_app',
-    );
+//     // Instantiate NewVersion manager object (Using GCP Console app as example)
+//     final newVersion = NewVersion(
+//       androidId: 'com.purethai.fa_mobile_app',
+//     );
 
-    Timer(const Duration(milliseconds: 800), () {
-      checkNewVersion(newVersion);
-    });
+//     Timer(const Duration(milliseconds: 800), () {
+//       checkNewVersion(newVersion);
+//     });
 
-    super.initState();
-  }
+//     super.initState();
+//   }
 
-void checkNewVersion(NewVersion newVersion) async {
-    final status = await newVersion.getVersionStatus();
-    if(status != null) {
-      if(status.canUpdate) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return UpdateDialog(
-              allowDismissal: true,
-              description: status.releaseNotes!,
-              version: status.storeVersion,
-              appLink: status.appStoreLink,
-            );
-          },
-        );
-        // newVersion.showUpdateDialog(
-        //   context: context,
-        //   versionStatus: status,
-        //   dialogText: 'New Version is available in the store (${status.storeVersion}), update now!',
-        //   dialogTitle: 'Update is Available!',
-        // );
-      }
-    }
-  }
+// void checkNewVersion(NewVersion newVersion) async {
+//     final status = await newVersion.getVersionStatus();
+//     if(status != null) {
+//       if(status.canUpdate) {
+//         showDialog(
+//           context: context,
+//           builder: (BuildContext context) {
+//             return UpdateDialog(
+//               allowDismissal: true,
+//               description: status.releaseNotes!,
+//               version: status.storeVersion,
+//               appLink: status.appStoreLink,
+//             );
+//           },
+//         );
+//         // newVersion.showUpdateDialog(
+//         //   context: context,
+//         //   versionStatus: status,
+//         //   dialogText: 'New Version is available in the store (${status.storeVersion}), update now!',
+//         //   dialogTitle: 'Update is Available!',
+//         // );
+//       }
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {

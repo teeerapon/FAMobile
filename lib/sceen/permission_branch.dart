@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, unnecessary_new, unused_field, non_constant_identifier_names, unused_import
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fa_mobile_app/sceen/check_code.dart';
 import 'package:fa_mobile_app/service/shared_service.dart';
@@ -19,6 +18,7 @@ class PermissionBranch extends StatefulWidget {
   const PermissionBranch({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _PermissionBranchState createState() => _PermissionBranchState();
 }
 
@@ -105,6 +105,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
+            // ignore: prefer_interpolation_to_compose_strings
             "Initial: " +
                 userCode.toString() +
                 ' ( สาขา ' +
@@ -134,13 +135,13 @@ class _PermissionBranchState extends State<PermissionBranch> {
         ),
         backgroundColor: HexColor('#283B71'),
         body: ProgressHUD(
+          inAsyncCall: isAPIcallProcess,
+          opacity: 0,
+          key: UniqueKey(),
           child: Form(
             key: globaAssetsFormkey,
             child: _detail(),
           ),
-          inAsyncCall: isAPIcallProcess,
-          opacity: 0,
-          key: UniqueKey(),
         ),
       ),
     );
@@ -149,8 +150,8 @@ class _PermissionBranchState extends State<PermissionBranch> {
   Widget _detail() {
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
@@ -186,14 +187,14 @@ class _PermissionBranchState extends State<PermissionBranch> {
           const SizedBox(
             height: 40,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 35, bottom: 10),
+          const Padding(
+            padding: EdgeInsets.only(left: 35, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       "ยินดีต้อนรับสู่ แอปพลิเคชัน",
                       style: TextStyle(
@@ -216,265 +217,38 @@ class _PermissionBranchState extends State<PermissionBranch> {
               ],
             ),
           ),
-          //
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 8.0),
-              child: Container(
-                alignment: Alignment.topCenter,
-                padding: const EdgeInsets.only(top: 5, right: 10.0),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView(
-                    primary: false,
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      userBranch == 901
-                          ? Visibility(
-                              visible: _visibleRead,
-                              child: Card(
-                                color: const Color.fromRGBO(255, 230, 80, 1),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16))),
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Container(
-                                  padding: const EdgeInsets.only(
-                                      top: 10.0, bottom: 10.0),
-                                  decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromRGBO(255, 230, 80, 1),
-                                      borderRadius:
-                                          BorderRadius.circular(22.0)),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(16),
-                                        child: const Icon(
-                                          Icons.menu,
-                                          color: Color.fromRGBO(40, 59, 113, 1),
-                                          size: 30.0,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Column(
-                                                children: [
-                                                  const Text(
-                                                    'เลือกสาขาเพื่อระบุสาขาของเมนูถัดไป',
-                                                    style: TextStyle(
-                                                      color: Colors.black38,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                  DropdownButton(
-                                                    dropdownColor:
-                                                        const Color.fromRGBO(
-                                                            255, 230, 80, 1),
-                                                    icon: const Icon(
-                                                        Icons.arrow_drop_down),
-                                                    iconSize: 36.0,
-                                                    underline: const SizedBox(),
-                                                    hint: const Text(
-                                                      'นับทรัพย์สิน',
-                                                      style: TextStyle(
-                                                        fontSize: 25.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Color.fromRGBO(
-                                                            40, 59, 113, 1),
-                                                      ),
-                                                    ),
-                                                    items: permission_branch
-                                                        .map((item) {
-                                                      return DropdownMenuItem(
-                                                        child: Text(
-                                                          'สาขาที่ ' +
-                                                              item['BranchID']
-                                                                  .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 25.0,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color:
-                                                                Color.fromRGBO(
-                                                                    40,
-                                                                    59,
-                                                                    113,
-                                                                    1),
-                                                          ),
-                                                        ),
-                                                        value: item['BranchID'],
-                                                      );
-                                                    }).toList(),
-                                                    focusColor:
-                                                        const Color.fromRGBO(
-                                                            40, 59, 113, 1),
-                                                    iconEnabledColor:
-                                                        const Color.fromRGBO(
-                                                            40, 59, 113, 1),
-                                                    onChanged: (newVal) {
-                                                      setState(() {
-                                                        _mySelection =
-                                                            newVal as int;
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (_) =>
-                                                                Scanner(
-                                                              brachID:
-                                                                  _mySelection!,
-                                                              dateTimeNow: now
-                                                                  .toString(),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      });
-                                                    },
-                                                    value: _mySelection,
-                                                  ),
-                                                  const SizedBox(height: 6),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Visibility(
-                              visible: _visibleRead,
-                              child: Card(
-                                color: const Color.fromRGBO(255, 230, 80, 1),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(16))),
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                elevation: 4.0,
-                                child: InkWell(
-                                  focusColor:
-                                      const Color.fromRGBO(40, 59, 113, 1),
-                                  hoverColor:
-                                      const Color.fromRGBO(40, 59, 113, 1),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => Scanner(
-                                          brachID: userBranch!,
-                                          dateTimeNow: now.toString(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  splashColor:
-                                      const Color.fromRGBO(40, 59, 113, 1),
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 15.0, bottom: 15.0),
-                                    decoration: BoxDecoration(
-                                        color: const Color.fromRGBO(
-                                            255, 230, 80, 1),
-                                        borderRadius:
-                                            BorderRadius.circular(22.0)),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(16),
-                                          child: const Icon(
-                                            Icons.skip_next,
-                                            color:
-                                                Color.fromRGBO(40, 59, 113, 1),
-                                            size: 32.0,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Column(
-                                                  children: const [
-                                                    Text(
-                                                      'สแกนเพื่อตรวจสอบข้อมูลทรัพย์สิน',
-                                                      style: TextStyle(
-                                                        color: Colors.black38,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 4),
-                                                    Text(
-                                                      "นับทรัพย์สิน",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        fontSize: 25.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Color.fromRGBO(
-                                                            40, 59, 113, 1),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Center(
-                        child: Card(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16))),
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          elevation: 4.0,
-                          child: InkWell(
-                            focusColor: const Color.fromRGBO(40, 59, 113, 1),
-                            hoverColor: const Color.fromRGBO(40, 59, 113, 1),
-                            onTap: () {
-                              checkQR();
-                            },
-                            splashColor: const Color.fromRGBO(40, 59, 113, 1),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  userBranch == 901
+                      ? Visibility(
+                          visible: _visibleRead,
+                          child: Card(
+                            color: const Color.fromRGBO(255, 230, 80, 1),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16))),
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
                               padding: const EdgeInsets.only(
-                                  top: 15.0, bottom: 15.0),
+                                  top: 10.0, bottom: 10.0),
                               decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: const Color.fromRGBO(255, 230, 80, 1),
                                   borderRadius: BorderRadius.circular(22.0)),
                               child: Row(
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.all(16),
                                     child: const Icon(
-                                      Icons.document_scanner,
+                                      Icons.menu,
                                       color: Color.fromRGBO(40, 59, 113, 1),
-                                      size: 32.0,
+                                      size: 30.0,
                                     ),
                                   ),
                                   Expanded(
@@ -485,25 +259,73 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Column(
-                                            children: const [
-                                              Text(
-                                                'สแกนเพื่อตรวจสอบข้อมูลทรัพย์สิน',
+                                            children: [
+                                              const Text(
+                                                'เลือกสาขาเพื่อระบุสาขาของเมนูถัดไป',
                                                 style: TextStyle(
                                                   color: Colors.black38,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                              SizedBox(height: 4),
-                                              Text(
-                                                "ตรวจสอบ QR Code",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  fontSize: 25.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Color.fromRGBO(
-                                                      40, 59, 113, 1),
+                                              DropdownButton(
+                                                dropdownColor:
+                                                    const Color.fromRGBO(
+                                                        255, 230, 80, 1),
+                                                icon: const Icon(
+                                                    Icons.arrow_drop_down),
+                                                iconSize: 36.0,
+                                                underline: const SizedBox(),
+                                                hint: const Text(
+                                                  'นับทรัพย์สิน',
+                                                  style: TextStyle(
+                                                    fontSize: 25.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color.fromRGBO(
+                                                        40, 59, 113, 1),
+                                                  ),
                                                 ),
+                                                items: permission_branch
+                                                    .map((item) {
+                                                  return DropdownMenuItem(
+                                                    value: item['BranchID'],
+                                                    child: Text(
+                                                      'สาขาที่ ${item['BranchID']}',
+                                                      style: const TextStyle(
+                                                        fontSize: 25.0,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Color.fromRGBO(
+                                                            40, 59, 113, 1),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                focusColor:
+                                                    const Color.fromRGBO(
+                                                        40, 59, 113, 1),
+                                                iconEnabledColor:
+                                                    const Color.fromRGBO(
+                                                        40, 59, 113, 1),
+                                                onChanged: (newVal) {
+                                                  setState(() {
+                                                    _mySelection =
+                                                        newVal as int;
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (_) => Scanner(
+                                                          brachID:
+                                                              _mySelection!,
+                                                          dateTimeNow:
+                                                              now.toString(),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  });
+                                                },
+                                                value: _mySelection,
                                               ),
+                                              const SizedBox(height: 6),
                                             ],
                                           ),
                                         ),
@@ -514,15 +336,229 @@ class _PermissionBranchState extends State<PermissionBranch> {
                               ),
                             ),
                           ),
+                        )
+                      : Visibility(
+                          visible: _visibleRead,
+                          child: Card(
+                            color: const Color.fromRGBO(255, 230, 80, 1),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16))),
+                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                            elevation: 4.0,
+                            child: InkWell(
+                              focusColor: const Color.fromRGBO(40, 59, 113, 1),
+                              hoverColor: const Color.fromRGBO(40, 59, 113, 1),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => Scanner(
+                                      brachID: userBranch!,
+                                      dateTimeNow: now.toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              splashColor: const Color.fromRGBO(40, 59, 113, 1),
+                              child: Container(
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, bottom: 15.0),
+                                decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(255, 230, 80, 1),
+                                    borderRadius: BorderRadius.circular(22.0)),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(16),
+                                      child: const Icon(
+                                        Icons.skip_next,
+                                        color: Color.fromRGBO(40, 59, 113, 1),
+                                        size: 32.0,
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'สแกนเพื่อตรวจสอบข้อมูลทรัพย์สิน',
+                                                  style: TextStyle(
+                                                    color: Colors.black38,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4),
+                                                Text(
+                                                  "นับทรัพย์สิน",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    fontSize: 25.0,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color.fromRGBO(
+                                                        40, 59, 113, 1),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Center(
+                    child: Card(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      elevation: 4.0,
+                      child: InkWell(
+                        focusColor: const Color.fromRGBO(40, 59, 113, 1),
+                        hoverColor: const Color.fromRGBO(40, 59, 113, 1),
+                        onTap: () {
+                          checkQR();
+                        },
+                        splashColor: const Color.fromRGBO(40, 59, 113, 1),
+                        child: Container(
+                          padding:
+                              const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(22.0)),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                child: const Icon(
+                                  Icons.list_alt_outlined,
+                                  color: Color.fromRGBO(40, 59, 113, 1),
+                                  size: 32.0,
+                                ),
+                              ),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'เมนูสำหรับดูรายการทรัพย์สินทั้งหมด',
+                                            style: TextStyle(
+                                              color: Colors.black38,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            "รายการทรัพย์สินทั้งหมด",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontSize: 25.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromRGBO(
+                                                  40, 59, 113, 1),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          ),
-          //
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Center(
+                    child: Card(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      elevation: 4.0,
+                      child: InkWell(
+                        focusColor: const Color.fromRGBO(40, 59, 113, 1),
+                        hoverColor: const Color.fromRGBO(40, 59, 113, 1),
+                        onTap: () {
+                          checkQR();
+                        },
+                        splashColor: const Color.fromRGBO(40, 59, 113, 1),
+                        child: Container(
+                          padding:
+                              const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(22.0)),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                child: const Icon(
+                                  Icons.document_scanner,
+                                  color: Color.fromRGBO(40, 59, 113, 1),
+                                  size: 32.0,
+                                ),
+                              ),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'สแกนเพื่อตรวจสอบข้อมูลทรัพย์สิน',
+                                            style: TextStyle(
+                                              color: Colors.black38,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: 4),
+                                          Text(
+                                            "ตรวจสอบ QR Code",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontSize: 25.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromRGBO(
+                                                  40, 59, 113, 1),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
+          )
         ],
       ),
     );
@@ -569,6 +605,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
           });
         } else {
           dynamic itemsResponse = jsonDecode(response.body);
+          // ignore: use_build_context_synchronously
           FormHelper.showSimpleAlertDialog(
               context,
               Config.appName,
@@ -579,6 +616,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
           });
         }
       } else {
+        // ignore: use_build_context_synchronously
         FormHelper.showSimpleAlertDialog(
             context, Config.appName, 'กรุณาสแกน Code บ้างอย่าง', "OK", () {
           Navigator.pop(context);
@@ -624,6 +662,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
             });
           } else {
             dynamic itemsResponse = jsonDecode(response.body);
+            // ignore: use_build_context_synchronously
             FormHelper.showSimpleAlertDialog(
                 context,
                 Config.appName,
@@ -634,6 +673,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
             });
           }
         } else {
+          // ignore: use_build_context_synchronously
           FormHelper.showSimpleAlertDialog(
               context, Config.appName, 'กรุณาสแกน Code บ้างอย่าง', "OK", () {
             Navigator.pop(context);

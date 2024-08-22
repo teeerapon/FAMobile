@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, override_on_non_overriding_member
+// ignore_for_file: unused_local_variable, override_on_non_overriding_member, library_private_types_in_public_api, non_constant_identifier_names
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -41,6 +41,8 @@ class _ViewDetailsState extends State<ViewDetails> {
   GlobalKey<FormState> globalFormkey = GlobalKey<FormState>();
   String? userCode;
   String? userID;
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -151,51 +153,115 @@ class _ViewDetailsState extends State<ViewDetails> {
     }
   }
 
+    List<dynamic> _filterAssets(List<dynamic> assetsList) {
+    if (searchQuery.isEmpty) {
+      return assetsList;
+    }
+    return assetsList.where((asset) {
+      return asset['Name'].toLowerCase().contains(searchQuery.toLowerCase()) ||
+          asset['Code'].toLowerCase().contains(searchQuery.toLowerCase()) ||
+          asset['BranchID'].toString().contains(searchQuery);
+    }).toList();
+  }
+
+  Widget _fixassets(BuildContext context) {
+    List<dynamic> filteredAssets = _filterAssets(assets);
+    return ListView.builder(
+      itemCount: filteredAssets.length,
+      itemBuilder: (context, index) {
+        return getCard(filteredAssets[index]);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    var count1 = assets.toList().length;
-    var count2 = assets2.toList().length;
-    var count3 = assets3.toList().length;
-    var count4 = lostAssets.toList().length;
+    var count1 = _filterAssets(assets).toList().length;
+    var count2 = _filterAssets(assets2).toList().length;
+    var count3 = _filterAssets(assets3).toList().length;
+    var count4 = _filterAssets(lostAssets).toList().length;
     return MaterialApp(
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: PreferredSize(
-              preferredSize: const Size(60.0, 60.0),
-              child: TabBar(
-                tabs: [
-                  Tab(
-                    child: SizedBox(
-                      height: 50,
-                      child: Text('นับแล้ว \n($count1)',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center),
+              preferredSize: const Size.fromHeight(150.0),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'ค้นหาทรัพย์สิน...',
+                        prefixIcon: const Icon(Icons.search),
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
                     ),
                   ),
-                  Tab(
-                    child: SizedBox(
-                      height: 50,
-                      child: Text('ต่างสาขา \n($count3)',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center),
-                    ),
+                  const SizedBox(
+                    height: 16,
                   ),
-                  Tab(
-                    child: SizedBox(
-                      height: 50,
-                      child: Text('คงเหลือ \n($count2)',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center),
-                    ),
+                  TabBar(
+                    tabs: [
+                      Tab(
+                        child: SizedBox(
+                          height: 50,
+                          child: Text('นับแล้ว \n($count1)',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                      Tab(
+                        child: SizedBox(
+                          height: 50,
+                          child: Text('ต่างสาขา \n($count3)',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                      Tab(
+                        child: SizedBox(
+                          height: 50,
+                          child: Text('คงเหลือ \n($count2)',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
             title: Text(
-              'ทรัพย์สิน สาขาที่ : ' + widget.branchPermission.toString(),
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              'ทรัพย์สิน สาขาที่ : ${widget.branchPermission}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             leading: Row(children: <Widget>[
               const SizedBox(
@@ -232,15 +298,6 @@ class _ViewDetailsState extends State<ViewDetails> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _fixassets(BuildContext context) {
-    return ListView.builder(
-      itemCount: assets.length,
-      itemBuilder: (context, index) {
-        return getCard(assets[index]);
-      },
     );
   }
 
@@ -424,11 +481,6 @@ class _ViewDetailsState extends State<ViewDetails> {
                             fontWeight: FontWeight.w500,
                             color: Colors.white)),
                     const SizedBox(width: 10),
-                    // Text('รอบบันทึก : รอบที่ $roundID',
-                    //     style: const TextStyle(
-                    //         fontSize: 14,
-                    //         fontWeight: FontWeight.w500,
-                    //         color: Colors.white))
                     Text('วันที่บันทึก : $assetDate',
                         style: const TextStyle(
                             fontSize: 16,

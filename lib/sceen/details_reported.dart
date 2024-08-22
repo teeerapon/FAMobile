@@ -42,6 +42,7 @@ class DetailsReported extends StatefulWidget {
     required this.imagePath_2,
   }) : super(key: key);
   @override
+  // ignore: library_private_types_in_public_api
   _DetailsReportedState createState() => _DetailsReportedState();
 }
 
@@ -66,6 +67,7 @@ class _DetailsReportedState extends State<DetailsReported> {
   String referenceSetState8 = 'QR Code ไม่สมบูรณ์ (รอตัดขาย)';
   String referenceSetState9 = 'อื่น ๆ';
   bool _visible = false;
+  // ignore: non_constant_identifier_names
   bool _visible_comment = false;
   var titleName = TextEditingController();
   var now = DateTime.now();
@@ -178,7 +180,7 @@ class _DetailsReportedState extends State<DetailsReported> {
                   height: 10,
                 ),
                 Text(
-                  'สาขาที่อยู่ของทรัพย์สิน :  ' + widget.brachID.toString(),
+                  'สาขาที่อยู่ของทรัพย์สิน :  ${widget.brachID}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       //fontStyle: FontStyle.italic,
@@ -197,7 +199,7 @@ class _DetailsReportedState extends State<DetailsReported> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'บันทึกโดย :  ' + widget.userCode,
+                      'บันทึกโดย :  ${widget.userCode}',
                       style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           //fontStyle: FontStyle.italic,
@@ -217,7 +219,7 @@ class _DetailsReportedState extends State<DetailsReported> {
                   ],
                 ),
                 Text(
-                  'สาขาที่ทำการบันทึก :  ' + widget.userBranch,
+                  'สาขาที่ทำการบันทึก :  ${widget.userBranch}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       //fontStyle: FontStyle.italic,
@@ -228,7 +230,7 @@ class _DetailsReportedState extends State<DetailsReported> {
                   height: 10,
                 ),
                 Text(
-                  'วันที่บันทึก :  ' + widget.date,
+                  'วันที่บันทึก :  ${widget.date}',
                   style: const TextStyle(
                       fontWeight: FontWeight.w500,
                       //fontStyle: FontStyle.italic,
@@ -243,7 +245,7 @@ class _DetailsReportedState extends State<DetailsReported> {
                   child: Text(
                     widget.detail.toString() == 'null'
                         ? 'สถานะล่าสุด :  '
-                        : 'สถานะล่าสุด :  ' + widget.detail.toString(),
+                        : 'สถานะล่าสุด :  ${widget.detail}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         //fontStyle: FontStyle.italic,
@@ -257,7 +259,7 @@ class _DetailsReportedState extends State<DetailsReported> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
-                    'สถานะครั้งนี้ :  ' + widget.reference.toString(),
+                    'สถานะครั้งนี้ :  ${widget.reference}',
                     style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         //fontStyle: FontStyle.italic,
@@ -265,8 +267,8 @@ class _DetailsReportedState extends State<DetailsReported> {
                         color: Colors.white),
                   ),
                 ),
-                Column(
-                  children: const <Widget>[
+                const Column(
+                  children: <Widget>[
                     SizedBox(
                       height: 10,
                     ),
@@ -316,8 +318,8 @@ class _DetailsReportedState extends State<DetailsReported> {
                 const SizedBox(height: 10),
                 Visibility(
                   visible: _visible,
-                  child: Column(
-                    children: const <Widget>[
+                  child: const Column(
+                    children: <Widget>[
                       SizedBox(
                         height: 10,
                       ),

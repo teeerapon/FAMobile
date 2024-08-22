@@ -25,10 +25,26 @@ class PeriodRound extends StatefulWidget {
 class _PeriodRoundState extends State<PeriodRound> {
   final now = DateTime.now();
   List<dynamic> period_round = [];
+  List<dynamic> filteredPeriodRound = []; // List for filtered data
+  TextEditingController filterController =
+      TextEditingController(); // Controller for TextField
+  String filter = ""; // Variable to store the filter
+
   @override
   void initState() {
     super.initState();
     fetchPeriod();
+    filterController.addListener(() {
+      setState(() {
+        filter = filterController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    filterController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchPeriod() async {
@@ -50,9 +66,11 @@ class _PeriodRoundState extends State<PeriodRound> {
       var items = jsonDecode(response.body);
       setState(() {
         period_round = items as List;
+        filteredPeriodRound = period_round; // Initialize filtered list
       });
     } else {
       period_round = [];
+      filteredPeriodRound = [];
     }
   }
 
@@ -96,16 +114,46 @@ class _PeriodRoundState extends State<PeriodRound> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: const Color.fromRGBO(40, 59, 113, 1),
+        bottom: PreferredSize(
+          preferredSize:
+              const Size.fromHeight(100.0), // Height of the TextField
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: filterController,
+              decoration: InputDecoration(
+                hintText: 'ค้นหารอบตรวจนับ...',
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: fetchPeriodList(context),
     );
   }
 
   Widget fetchPeriodList(BuildContext context) {
+    List<dynamic> displayedList = period_round.where((element) {
+      var periodID = element['PeriodID'].toString().toLowerCase();
+      var beginDate = element['BeginDate'].toLowerCase();
+      var description = element['Description'].toLowerCase();
+
+      return periodID.contains(filter.toLowerCase()) ||
+          beginDate.contains(filter.toLowerCase()) ||
+          description.contains(filter.toLowerCase());
+    }).toList();
+
     return ListView.builder(
-      itemCount: period_round.length,
+      itemCount: displayedList.length,
       itemBuilder: (context, index) {
-        return get_Item_period(period_round[index]);
+        return get_Item_period(displayedList[index]);
       },
     );
   }

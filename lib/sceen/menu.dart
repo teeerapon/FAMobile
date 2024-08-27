@@ -103,13 +103,13 @@ class _ScannerState extends State<Scanner> {
         ),
         backgroundColor: HexColor('#283B71'),
         body: ProgressHUD(
+          inAsyncCall: isAPIcallProcess,
+          opacity: 0,
+          key: UniqueKey(),
           child: Form(
             key: globaAssetsFormkey,
             child: _detail(),
           ),
-          inAsyncCall: isAPIcallProcess,
-          opacity: 0,
-          key: UniqueKey(),
         ),
       ),
     );
@@ -118,7 +118,6 @@ class _ScannerState extends State<Scanner> {
   Widget _detail() {
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -153,34 +152,37 @@ class _ScannerState extends State<Scanner> {
             ),
           ),
           const SizedBox(
-            height: 40,
+            height: 30,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 35, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "กำลังใช้งานเมนูสาขาที่ " + widget.brachID.toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                          color: Colors.white),
-                    ),
-                    const Text(
-                      "กรุณาเลือกเมนู",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                          color: Color(0xffa29aac)),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                  ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "กำลังใช้งานเมนู${widget.brachID == 901 ? "สำนักงาน HO" : "ที่สาขา ${widget.brachID}"}",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24,
+                            color: Colors.white),
+                      ),
+                      const Text(
+                        "กรุณาเลือกเมนู",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Color(0xffa29aac)),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -192,99 +194,14 @@ class _ScannerState extends State<Scanner> {
               child: Container(
                 alignment: Alignment.topCenter,
                 padding: const EdgeInsets.only(top: 5),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView(
-                    primary: false,
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Visibility(
-                        visible: _isButtonDisabled,
-                        child: Card(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(16))),
-                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                          elevation: 4.0,
-                          child: InkWell(
-                            focusColor: const Color.fromRGBO(40, 59, 113, 1),
-                            hoverColor: const Color.fromRGBO(40, 59, 113, 1),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => TestAsset(
-                                    dateTimeNow: widget.dateTimeNow,
-                                    branchPermission: widget.brachID,
-                                  ),
-                                ),
-                              );
-                            },
-                            splashColor: const Color.fromRGBO(40, 59, 113, 1),
-                            child: Container(
-                              padding: const EdgeInsets.only(
-                                  top: 10.0, bottom: 10.0),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(22.0)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(16),
-                                    child: const Icon(
-                                      Icons.qr_code_2_rounded,
-                                      color: Color.fromRGBO(40, 59, 113, 1),
-                                      size: 40.0,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                'สแกนเพื่อนับทรัพย์สินสาขา ' +
-                                                    widget.brachID.toString(),
-                                                style: const TextStyle(
-                                                  color: Colors.black38,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              const Text(
-                                                "สแกน QR CODE",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  fontSize: 25.0,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Color.fromRGBO(
-                                                      40, 59, 113, 1),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Card(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Visibility(
+                      visible: _isButtonDisabled,
+                      child: Card(
                         shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(16))),
@@ -297,7 +214,8 @@ class _ScannerState extends State<Scanner> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => PeriodRound(
+                                builder: (_) => TestAsset(
+                                  dateTimeNow: widget.dateTimeNow,
                                   branchPermission: widget.brachID,
                                 ),
                               ),
@@ -316,9 +234,9 @@ class _ScannerState extends State<Scanner> {
                                 Container(
                                   padding: const EdgeInsets.all(16),
                                   child: const Icon(
-                                    Icons.description_rounded,
+                                    Icons.qr_code_2_rounded,
                                     color: Color.fromRGBO(40, 59, 113, 1),
-                                    size: 38.0,
+                                    size: 40.0,
                                   ),
                                 ),
                                 Expanded(
@@ -331,8 +249,7 @@ class _ScannerState extends State<Scanner> {
                                         child: Column(
                                           children: [
                                             Text(
-                                              'แสดงรายงานทรัพย์สินสาขา ' +
-                                                  widget.brachID.toString(),
+                                              'สแกนเพื่อนับทรัพย์สิน ${widget.brachID == 901 ? "HO" : widget.brachID}',
                                               style: const TextStyle(
                                                 color: Colors.black38,
                                                 fontWeight: FontWeight.w500,
@@ -340,7 +257,7 @@ class _ScannerState extends State<Scanner> {
                                             ),
                                             const SizedBox(height: 4),
                                             const Text(
-                                              "รายงานทรัพย์สิน",
+                                              "สแกน QR CODE",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 fontSize: 25.0,
@@ -360,8 +277,84 @@ class _ScannerState extends State<Scanner> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Card(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16))),
+                      margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      elevation: 4.0,
+                      child: InkWell(
+                        focusColor: const Color.fromRGBO(40, 59, 113, 1),
+                        hoverColor: const Color.fromRGBO(40, 59, 113, 1),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PeriodRound(
+                                branchPermission: widget.brachID,
+                              ),
+                            ),
+                          );
+                        },
+                        splashColor: const Color.fromRGBO(40, 59, 113, 1),
+                        child: Container(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(22.0)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                child: const Icon(
+                                  Icons.description_rounded,
+                                  color: Color.fromRGBO(40, 59, 113, 1),
+                                  size: 38.0,
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'แสดงรายงานทรัพย์สินสาขา ${widget.brachID}',
+                                            style: const TextStyle(
+                                              color: Colors.black38,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          const Text(
+                                            "รายงานทรัพย์สิน",
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontSize: 25.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromRGBO(
+                                                  40, 59, 113, 1),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

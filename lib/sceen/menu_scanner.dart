@@ -1,9 +1,12 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously, non_constant_identifier_names
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
@@ -12,7 +15,7 @@ import 'package:snippet_coder_utils/hex_color.dart';
 import 'package:fa_mobile_app/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:developer';
 
 import 'menu.dart';
 
@@ -26,45 +29,43 @@ class TestAsset extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _TestAssetState createState() => _TestAssetState();
 }
 
 class _TestAssetState extends State<TestAsset> {
   GlobalKey<FormState> codeFormkey = GlobalKey<FormState>();
   bool isAPIcallProcessAssets = false;
-  var codeController = TextEditingController();
-  var nameController = TextEditingController();
-  var branchController = TextEditingController();
-  var dateTimeController = TextEditingController();
   int statusController = 1;
-  var assetIDController = TextEditingController();
-  var referenceController = TextEditingController();
-  String referenceSetState1 = "สภาพดี";
-  String referenceSetState2 = "ชำรุดรอซ่อม";
-  String referenceSetState3 = "รอตัดชำรุด";
-  String referenceSetState4 = "รอตัดขาย";
-  String referenceSetState5 = "อื่น ๆ";
-  bool checkBox1 = false;
-  bool checkBox2 = false;
-  bool checkBox3 = false;
-  bool checkBox4 = false;
-  bool checkBox5 = false;
+  String? codeController;
+  String? nameController;
+  String? branchController;
+  DateTime? dateTimeController = DateTime.now();
+  String? assetIDController;
+  String? referenceController;
   String? moneyController;
-  var imagePath = TextEditingController();
-  var imagePath_2 = TextEditingController();
+  String? imagePath;
+  String? imagePath_2;
   String? userID;
   int? userBranch;
   String? userCode;
+  String? round_id;
   int userBranchID = 0;
   bool _visible = false;
   dynamic itemOfName = [];
-  var round_id = TextEditingController();
+  String selectedValue = 'ไม่ได้ระบุสถานะ';
   var now = DateTime.now();
+
+  final ImagePicker _picker = ImagePicker();
+  List<XFile?> _imageFiles = []; // List to store images
+  List<String> listImage = ['', ''];
 
   @override
   dynamic initState() {
     super.initState();
     getUser();
+    // Initialize the list with null values
+    _imageFiles = List<XFile?>.filled(listImage.length, null);
   }
 
   void getUser() async {
@@ -110,19 +111,47 @@ class _TestAssetState extends State<TestAsset> {
         ),
         backgroundColor: HexColor('#283B71'),
         body: ProgressHUD(
+          inAsyncCall: isAPIcallProcessAssets,
+          opacity: 0,
+          key: UniqueKey(),
           child: Form(
             key: codeFormkey,
             child: _scanner(context),
           ),
-          inAsyncCall: isAPIcallProcessAssets,
-          opacity: 0,
-          key: UniqueKey(),
         ),
       ),
     );
   }
 
   Widget _scanner(BuildContext context) {
+    List<dynamic> listImage = [imagePath, imagePath_2];
+    List<dynamic> radioListOptions = [
+      'ไม่ได้ระบุสถานะ',
+      'สภาพดี',
+      'ชำรุดรอซ่อม',
+      'รอตัดขาย',
+      'รอตัดชำรุด',
+      'อื่น ๆ'
+    ];
+
+    String assetDate = '';
+
+    if (dateTimeController is DateTime) {
+      // If dateTimeController is already a DateTime object
+      final DateFormat formatter = DateFormat('yyyy/MM/dd');
+      assetDate = formatter.format(dateTimeController!);
+    } else if (dateTimeController is String) {
+      // If dateTimeController is a String, parse it to a DateTime first
+      try {
+        DateTime date = DateTime.parse(dateTimeController as String);
+        final DateFormat formatter = DateFormat('yyyy/MM/dd');
+        assetDate = formatter.format(date);
+      } catch (e) {
+        // Handle the parsing error
+        log('Error parsing date: $e');
+      }
+    }
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +171,7 @@ class _TestAssetState extends State<TestAsset> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: 50, right: 50, top: 35),
                   child: Align(
@@ -159,9 +188,9 @@ class _TestAssetState extends State<TestAsset> {
             ),
           ),
           const SizedBox(height: 30),
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
+            children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(left: 35, right: 16),
                 child: Text(
@@ -186,370 +215,7 @@ class _TestAssetState extends State<TestAsset> {
             ],
           ),
           const SizedBox(height: 40),
-          Center(
-            child: Column(
-              children: [
-                Visibility(
-                  visible: _visible,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25, right: 25),
-                    child: TextField(
-                      readOnly: true,
-                      textAlign: TextAlign.center,
-                      controller: codeController,
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      decoration: const InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          labelText: "Code",
-                          labelStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(
-                            Icons.subtitles_rounded,
-                            color: Colors.white,
-                          )),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: _visible,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25, right: 25),
-                    child: TextField(
-                      readOnly: true,
-                      textAlign: TextAlign.center,
-                      controller: nameController,
-                      style: const TextStyle(color: Colors.white, fontSize: 20),
-                      decoration: const InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          labelText: "ชื่อ",
-                          labelStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(
-                            Icons.subtitles_rounded,
-                            color: Colors.white,
-                          )),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Visibility(
-                  visible: _visible,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 25, right: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 3,
-                          child: TextField(
-                            readOnly: true,
-                            textAlign: TextAlign.center,
-                            controller: branchController,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                labelText: "สาขา",
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.subtitles_rounded,
-                                  color: Colors.white,
-                                )),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 2,
-                          child: TextField(
-                            readOnly: true,
-                            textAlign: TextAlign.center,
-                            controller: dateTimeController,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
-                            decoration: const InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.white)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color:
-                                            Color.fromRGBO(255, 255, 255, 1))),
-                                labelText: "วันที่และเวลา",
-                                labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(
-                                  Icons.subtitles_rounded,
-                                  color: Colors.white,
-                                )),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: _visible,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 25, right: 25, top: 25),
-                    child: CarouselSlider(
-                      options: CarouselOptions(
-                        height: 250.0,
-                        viewportFraction: 1,
-                        autoPlay: true,
-                      ),
-                      items: [
-                        Image.network(
-                          imagePath.text, // this image doesn't exist
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return Image.asset(
-                              "assets/images/ATT_220300020.png",
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                        Image.network(
-                          imagePath_2.text, // this image doesn't exist
-                          fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return Image.asset(
-                              "assets/images/ATT_220300020.png",
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                      ].map((i) {
-                        return i;
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Visibility(
-                  visible: _visible,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: Column(
-                      children: [
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(unselectedWidgetColor: Colors.white),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                value: checkBox1,
-                                activeColor: Colors.orangeAccent,
-                                splashRadius: 30,
-                                onChanged: (value) {
-                                  setState(() {
-                                    checkBox1 = value!;
-                                    if (checkBox1 == false) {
-                                      referenceController.clear();
-                                      _update();
-                                    } else {
-                                      checkBox2 = false;
-                                      checkBox3 = false;
-                                      checkBox4 = false;
-                                      checkBox5 = false;
-                                      referenceController.text =
-                                          referenceSetState1.toString();
-                                      _update();
-                                    }
-                                  });
-                                },
-                              ),
-                              const Text('สภาพดี',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(unselectedWidgetColor: Colors.white),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                value: checkBox2,
-                                activeColor: Colors.orangeAccent,
-                                splashRadius: 30,
-                                onChanged: (value) {
-                                  setState(() {
-                                    checkBox2 = value!;
-                                    if (checkBox2 == false) {
-                                      referenceController.clear();
-                                      _update();
-                                    } else {
-                                      checkBox1 = false;
-                                      checkBox3 = false;
-                                      checkBox4 = false;
-                                      checkBox5 = false;
-                                      referenceController.text =
-                                          referenceSetState2.toString();
-                                      _update();
-                                    }
-                                  });
-                                },
-                              ),
-                              const Text('ชำรุดรอซ่อม',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(unselectedWidgetColor: Colors.white),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                value: checkBox4,
-                                activeColor: Colors.orangeAccent,
-                                splashRadius: 30,
-                                onChanged: (value) {
-                                  setState(() {
-                                    checkBox4 = value!;
-                                    if (checkBox4 == false) {
-                                      referenceController.clear();
-                                      _update();
-                                    } else {
-                                      checkBox1 = false;
-                                      checkBox2 = false;
-                                      checkBox3 = false;
-                                      checkBox5 = false;
-                                      referenceController.text =
-                                          referenceSetState4.toString();
-                                      _update();
-                                    }
-                                  });
-                                },
-                              ),
-                              const Text(
-                                'รอตัดขาย',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Theme(
-                          data: Theme.of(context)
-                              .copyWith(unselectedWidgetColor: Colors.white),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                value: checkBox3,
-                                activeColor: Colors.orangeAccent,
-                                splashRadius: 30,
-                                onChanged: (value) {
-                                  setState(() {
-                                    checkBox3 = value!;
-                                    if (checkBox3 == false) {
-                                      referenceController.clear();
-                                      _update();
-                                    } else {
-                                      checkBox1 = false;
-                                      checkBox2 = false;
-                                      checkBox4 = false;
-                                      checkBox5 = false;
-                                      referenceController.text =
-                                          referenceSetState3.toString();
-                                      _update();
-                                    }
-                                  });
-                                },
-                              ),
-                              const Text(
-                                'รอตัดชำรุด',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Theme(
-                        //   data: Theme.of(context)
-                        //       .copyWith(unselectedWidgetColor: Colors.white),
-                        //   child: Row(
-                        //     children: [
-                        //       Checkbox(
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(10),
-                        //         ),
-                        //         value: checkBox5,
-                        //         activeColor: Colors.orangeAccent,
-                        //         splashRadius: 30,
-                        //         onChanged: (value) {
-                        //           setState(() {
-                        //             checkBox5 = value!;
-                        //             if (checkBox5 == false) {
-                        //               referenceController.clear();
-                        //               _update();
-                        //             } else {
-                        //               checkBox1 = false;
-                        //               checkBox3 = false;
-                        //               checkBox2 = false;
-                        //               checkBox4 = false;
-                        //               referenceController.text =
-                        //                   referenceSetState5.toString();
-                        //               _update();
-                        //               _visible_comment = true;
-                        //             }
-                        //           });
-                        //         },
-                        //       ),
-                        //       const Text(
-                        //         'อื่น ๆ',
-                        //         style: TextStyle(
-                        //             color: Colors.white,
-                        //             fontSize: 16,
-                        //             fontWeight: FontWeight.w500),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+          // ScanCarema
           Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -581,14 +247,14 @@ class _TestAssetState extends State<TestAsset> {
                             size: 40.0,
                           ),
                         ),
-                        Expanded(
+                        const Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
+                            children: <Widget>[
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Column(
-                                  children: const [
+                                  children: <Widget>[
                                     Text(
                                       'สแกนนับทรัพย์สินและการทำบันทึก',
                                       style: TextStyle(color: Colors.black38),
@@ -616,68 +282,354 @@ class _TestAssetState extends State<TestAsset> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          Visibility(
+            visible: _visible,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 4.0, horizontal: 8.0),
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // จำนวนคอลัมน์ในแต่ละแถว
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                          childAspectRatio:
+                              1.0, // อัตราส่วนระหว่างความกว้างกับความสูงของแต่ละรูปภาพ
+                        ),
+                        itemCount: listImage.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () => _takePicture(index), // pass the index
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // มุมโค้งของรูปภาพ
+                              child: _imageFiles[index] == null
+                                  ? Image.network(
+                                      (listImage[index]?.isNotEmpty ?? false)
+                                          ? listImage[index]
+                                          : 'assets/images/ATT_220300020.png',
+                                      fit: BoxFit.cover,
+                                      // ปรับขนาดรูปภาพให้เต็มพื้นที่ที่กำหนด
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          color: Colors.grey[
+                                              200], // แสดงพื้นหลังสีเทาในกรณีที่โหลดรูปภาพไม่สำเร็จ
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.broken_image,
+                                                color: Colors.grey[400],
+                                              ),
+                                              Text(
+                                                'No Image',
+                                                style: TextStyle(
+                                                  color: Colors.grey[400],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : Image.file(
+                                      File(_imageFiles[index]!.path),
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: _visible,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 4.0, horizontal: 8.0),
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 32.0),
+                    child: SizedBox(
+                      width: double.maxFinite,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              nameController ?? '',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  //fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                  color: Colors.black),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "รหัสทรัพย์สิน: ${codeController ?? ''}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  //fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                  color: Colors.black),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "สาขา: ${branchController ?? ''}",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  //fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                  color: Colors.black),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "วันที่บันทึก: $assetDate",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  //fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                  color: Colors.black),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'สถานะครั้งนี้ :  $selectedValue',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  //fontStyle: FontStyle.italic,
+                                  fontSize: 18,
+                                  color: Colors.black),
+                            ),
+                          ]),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: _visible,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 4.0, horizontal: 8.0),
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: StatefulBuilder(
+                      builder: (context, setState) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: radioListOptions.map((option) {
+                            return RadioListTile<String>(
+                              title: Text(option),
+                              value: option,
+                              groupValue: selectedValue,
+                              onChanged: editDetail,
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
+  //  _takePicture
+  Future<void> _takePicture(int index) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      setState(() {
+        _imageFiles[index] = image; // Update specific index
+      });
+      await _uploadImage(image, index); // อัปโหลดรูปภาพหลังจากถ่ายเสร็จ
+    }
+  }
+
+  Future<void> _uploadImage(XFile image, index) async {
+    // check_files_NewNAC
+    // สร้าง MultipartRequest
+    var uri = Uri.http(Config.apiURL,
+        '/api/check_files_NewNAC'); // แทนที่ด้วย API endpoint ที่ถูกต้องของคุณ
+    var request = http.MultipartRequest('POST', uri);
+
+    // เพิ่มไฟล์รูปภาพใน request
+    var file = await http.MultipartFile.fromPath('file', image.path);
+    request.files.add(file);
+
+    // ส่งคำขอไปยัง API
+    var response = await request.send();
+
+    // ตรวจสอบผลลัพธ์
+    if (response.statusCode == 200) {
+      log('Image uploaded successfully!');
+      var responseData = await response.stream.bytesToString();
+      var jsonData = json.decode(responseData);
+      log('Response data: $jsonData');
+
+      // ดึงค่าของ ATT
+      if (jsonData['attach'] != null && jsonData['attach'].isNotEmpty) {
+        
+        String attValue = jsonData['attach'][0]['ATT'];
+        String extension = jsonData['extension'];
+        SharedPreferences roundid = await SharedPreferences.getInstance();
+        var client = http.Client();
+        var url = Uri.http(Config.apiURL, '/api/FA_Mobile_UploadImage');
+        Map<String, String> requestHeaders = {
+          'Content-Type': 'application/json; charset=utf-8',
+        };
+
+        await client.post(
+          url,
+          headers: requestHeaders,
+          body: jsonEncode({
+            "Code": codeController,
+            "RoundID": roundid.getString("RoundID")!,
+            "index": index,
+            "url":
+                "http://vpnptec.dyndns.org:33080/NEW_NAC/$attValue.$extension",
+          }),
+        );
+      }
+    } else {
+      log('Failed to upload image. Status code: ${response.statusCode}');
+    }
+  }
+
+  // editDetail
+  Future<void> editDetail(String? value) async {
+    if (value == null) return;
+    SharedPreferences roundid = await SharedPreferences.getInstance();
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json;charset=utf-8',
+    };
+    var client = http.Client();
+    var url = Uri.http(Config.apiURL, Config.updateReference);
+    var response = await client.put(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode({
+        "Code": codeController,
+        "RoundID": roundid.getString("RoundID")!,
+        "Reference": value,
+        "UserID": userID,
+        "BranchID": widget.branchPermission,
+        "Date": now.toString(),
+      }),
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        selectedValue = value;
+      });
+    }
+  }
+
   //Scan
   Future<void> startScan() async {
     setState(() {
-      checkBox1 = false;
-      checkBox2 = false;
-      checkBox3 = false;
       _visible = false;
     });
     SharedPreferences pref = await SharedPreferences.getInstance();
     SharedPreferences roundid = await SharedPreferences.getInstance();
     try {
-      var open_camera = await Permission.camera.status;
-      if (open_camera.isGranted) {
+      var openCamera = await Permission.camera.status;
+      if (openCamera.isGranted) {
         String? cameraScanResult = await scanner.scan();
         setState(() {
-          codeController.text = cameraScanResult!;
+          codeController = cameraScanResult!;
         });
 
-        if (codeController.text.isNotEmpty) {
+        if (codeController!.isNotEmpty) {
           Map<String, String> requestHeaders = {
             'Content-Type': 'application/json; charset=utf-8',
           };
           var client = http.Client();
           var url = Uri.http(Config.apiURL, Config.assetsAPI);
-
           var response = await client.post(
             url,
             headers: requestHeaders,
             body: jsonEncode({
-              "Code": codeController.text,
+              "Code": codeController,
               "UserBranch": widget.branchPermission,
               "RoundID": roundid.getString("RoundID")!,
             }),
           );
-          if (response.statusCode == 200) {
-            dynamic itemsResponse = jsonDecode(response.body);
+          dynamic itemsResponse = jsonDecode(response.body);
+          if (response.statusCode != 200) {
+            FormHelper.showSimpleAlertDialog(
+                context, Config.appName, itemsResponse, "ยอมรับ", () {
+              Navigator.pop(context);
+              setState(() {
+                assetIDController = null;
+                codeController = null;
+                nameController = null;
+                branchController = null;
+                dateTimeController = null;
+                imagePath = null;
+                imagePath_2 = null;
+              });
+            });
+          } else if (response.statusCode == 200) {
             setState(() {
-              imagePath.text = itemsResponse['data'][0]['ImagePath'].toString();
-              imagePath_2.text =
-                  itemsResponse['data'][0]['ImagePath_2'].toString();
-              nameController.text = itemsResponse['data'][0]['Name'];
-              dateTimeController.text = '$now';
-              branchController.text =
+              listImage = [
+                itemsResponse['data'][0]['ImagePath'].toString(),
+                itemsResponse['data'][0]['ImagePath_2'].toString()
+              ];
+              imagePath = itemsResponse['data'][0]['ImagePath'].toString();
+              imagePath_2 = itemsResponse['data'][0]['ImagePath_2'].toString();
+              nameController = itemsResponse['data'][0]['Name'];
+              dateTimeController = DateTime.now();
+              branchController =
                   itemsResponse['data'][0]['BranchID'].toString();
-              assetIDController.text =
+              assetIDController =
                   itemsResponse['data'][0]['AssetID'].toString();
               userID = pref.getString("UserID")!;
               userBranchID = pref.getInt("BranchID")!;
-              round_id.text = roundid.getString("RoundID")!;
-              referenceController.text = "ไม่ได้ระบุสถานะ";
+              round_id = roundid.getString("RoundID")!;
+              referenceController = "ไม่ได้ระบุสถานะ";
             });
-            if (codeController.text.isNotEmpty &&
-                nameController.text.isNotEmpty &&
-                branchController.text.isNotEmpty &&
-                dateTimeController.text.isNotEmpty &&
-                assetIDController.text.isNotEmpty &&
+            if (codeController!.isNotEmpty &&
+                nameController!.isNotEmpty &&
+                assetIDController!.isNotEmpty &&
                 userID.toString().isNotEmpty) {
               var client = http.Client();
               var url = Uri.http(Config.apiURL, Config.addAssetsAPI);
@@ -685,15 +637,15 @@ class _TestAssetState extends State<TestAsset> {
                 url,
                 headers: requestHeaders,
                 body: jsonEncode({
-                  "Name": nameController.text,
-                  "Code": codeController.text,
-                  "BranchID": branchController.text,
-                  "Date": dateTimeController.text,
+                  "Name": nameController,
+                  "Code": codeController,
+                  "BranchID": branchController,
+                  "Date": dateTimeController.toString(),
                   "Status": statusController,
                   "UserID": userID,
                   "UserBranch": widget.branchPermission,
-                  "RoundID": round_id.text,
-                  "Reference": referenceController.text,
+                  "RoundID": round_id,
+                  "Reference": referenceController,
                 }),
               );
               if (response.statusCode == 200) {
@@ -708,27 +660,17 @@ class _TestAssetState extends State<TestAsset> {
                     () {
                   Navigator.pop(context);
                   setState(() {
-                    assetIDController.clear();
-                    codeController.clear();
-                    nameController.clear();
-                    branchController.clear();
-                    dateTimeController.clear();
-                    imagePath.clear();
-                    imagePath_2.clear();
+                    assetIDController = null;
+                    codeController = null;
+                    nameController = null;
+                    branchController = null;
+                    dateTimeController = null;
+                    imagePath = null;
+                    imagePath_2 = null;
                   });
                 });
               }
             }
-          } else {
-            dynamic itemsResponse = jsonDecode(response.body);
-            FormHelper.showSimpleAlertDialog(
-                context,
-                Config.appName,
-                itemsResponse['message'].toString() +
-                    itemsResponse['data'].toString(),
-                "ยอมรับ", () {
-              Navigator.pop(context);
-            });
           }
         } else {
           FormHelper.showSimpleAlertDialog(
@@ -736,14 +678,14 @@ class _TestAssetState extends State<TestAsset> {
             Navigator.pop(context);
           });
         }
-      } else if (open_camera.isDenied) {
+      } else if (openCamera.isDenied) {
         if (await Permission.camera.request().isGranted) {
           String? cameraScanResult = await scanner.scan();
           setState(() {
-            codeController.text = cameraScanResult!;
+            codeController = cameraScanResult!;
           });
 
-          if (codeController.text.isNotEmpty) {
+          if (codeController!.isNotEmpty) {
             Map<String, String> requestHeaders = {
               'Content-Type': 'application/json; charset=utf-8',
             };
@@ -754,7 +696,7 @@ class _TestAssetState extends State<TestAsset> {
               url,
               headers: requestHeaders,
               body: jsonEncode({
-                "Code": codeController.text,
+                "Code": codeController,
                 "UserBranch": widget.branchPermission,
                 "RoundID": roundid.getString("RoundID")!,
               }),
@@ -762,22 +704,20 @@ class _TestAssetState extends State<TestAsset> {
             if (response.statusCode == 200) {
               dynamic itemsResponse = jsonDecode(response.body);
               setState(() {
-                nameController.text = itemsResponse['data'][0]['Name'];
-                dateTimeController.text = '$now';
-                branchController.text =
+                nameController = itemsResponse['data'][0]['Name'];
+                dateTimeController = DateTime.now();
+                branchController =
                     itemsResponse['data'][0]['BranchID'].toString();
-                assetIDController.text =
+                assetIDController =
                     itemsResponse['data'][0]['AssetID'].toString();
                 userID = pref.getString("UserID")!;
                 userBranchID = pref.getInt("BranchID")!;
-                round_id.text = roundid.getString("RoundID")!;
-                referenceController.text = "ไม่ได้ระบุสถานะ";
+                round_id = roundid.getString("RoundID")!;
+                referenceController = "ไม่ได้ระบุสถานะ";
               });
-              if (codeController.text.isNotEmpty &&
-                  nameController.text.isNotEmpty &&
-                  branchController.text.isNotEmpty &&
-                  dateTimeController.text.isNotEmpty &&
-                  assetIDController.text.isNotEmpty &&
+              if (codeController!.isNotEmpty &&
+                  nameController!.isNotEmpty &&
+                  assetIDController!.isNotEmpty &&
                   userID.toString().isNotEmpty) {
                 var client = http.Client();
                 var url = Uri.http(Config.apiURL, Config.addAssetsAPI);
@@ -785,15 +725,15 @@ class _TestAssetState extends State<TestAsset> {
                   url,
                   headers: requestHeaders,
                   body: jsonEncode({
-                    "Name": nameController.text,
-                    "Code": codeController.text,
-                    "BranchID": branchController.text,
-                    "Date": dateTimeController.text,
+                    "Name": nameController,
+                    "Code": codeController,
+                    "BranchID": branchController,
+                    "Date": dateTimeController.toString(),
                     "Status": statusController,
                     "UserID": userID,
                     "UserBranch": widget.branchPermission,
-                    "RoundID": round_id.text,
-                    "Reference": referenceController.text,
+                    "RoundID": round_id,
+                    "Reference": referenceController,
                   }),
                 );
                 if (response.statusCode == 200) {
@@ -807,25 +747,26 @@ class _TestAssetState extends State<TestAsset> {
                       itemsResponse['message'], "ยอมรับ", () {
                     Navigator.pop(context);
                     setState(() {
-                      assetIDController.clear();
-                      codeController.clear();
-                      nameController.clear();
-                      branchController.clear();
-                      dateTimeController.clear();
+                      assetIDController = null;
+                      codeController = null;
+                      nameController = null;
+                      branchController = null;
+                      dateTimeController = null;
                     });
                   });
                 }
               }
             } else {
               dynamic itemsResponse = jsonDecode(response.body);
-              FormHelper.showSimpleAlertDialog(
-                  context,
-                  Config.appName,
-                  itemsResponse['message'].toString() +
-                      itemsResponse['data'].toString(),
-                  "ยอมรับ", () {
-                Navigator.pop(context);
-              });
+              log(itemsResponse);
+              // FormHelper.showSimpleAlertDialog(
+              //     context,
+              //     Config.appName,
+              //     itemsResponse['message'].toString() +
+              //         itemsResponse['data'].toString(),
+              //     "ยอมรับ", () {
+              //   Navigator.pop(context);
+              // });
             }
           } else {
             FormHelper.showSimpleAlertDialog(
@@ -836,31 +777,7 @@ class _TestAssetState extends State<TestAsset> {
         }
       }
     } on PlatformException {
-      codeController.text = "Failed to get platfrom version.";
+      codeController = "Failed to get platfrom version.";
     }
-  }
-
-  Future<void> _update() async {
-    SharedPreferences roundid = await SharedPreferences.getInstance();
-    setState(() {
-      round_id.text = roundid.getString("RoundID")!;
-    });
-    Map<String, String> requestHeaders = {
-      'Content-Type': 'application/json;charset=utf-8',
-    };
-    var client = http.Client();
-    var url = Uri.http(Config.apiURL, Config.updateReference);
-    await client.put(
-      url,
-      headers: requestHeaders,
-      body: jsonEncode({
-        "Code": codeController.text,
-        "RoundID": round_id.text,
-        "Reference": referenceController.text,
-        "UserID": userID,
-        "BranchID": widget.branchPermission,
-        "Date": now.toString(),
-      }),
-    );
   }
 }

@@ -149,7 +149,7 @@ class _LohinSceenState extends State<LohinSceen> {
               },
               borderColor: Colors.white,
               showPrefixIcon: true,
-              prefixIcon: const Icon(Icons.password),
+              prefixIcon: const Icon(Icons.lock_outline),
               prefixIconColor: Colors.white,
               borderFocusColor: Colors.white,
               textColor: Colors.white,

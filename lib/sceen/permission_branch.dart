@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, unnecessary_new, unused_field, non_constant_identifier_names, unused_import
 import 'dart:convert';
+import 'package:fa_mobile_app/sceen/listAllassets.dart';
 import 'package:flutter/material.dart';
 import 'package:fa_mobile_app/sceen/check_code.dart';
 import 'package:fa_mobile_app/service/shared_service.dart';
@@ -106,11 +107,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
         appBar: AppBar(
           title: Text(
             // ignore: prefer_interpolation_to_compose_strings
-            "Initial: " +
-                userCode.toString() +
-                ' ( สาขา ' +
-                userBranch.toString() +
-                ' )',
+            "Initial: $userCode (${userBranch == 901 ? "HO" : userBranch})",
             style: const TextStyle(
               fontSize: 14,
               color: Color.fromRGBO(40, 59, 113, 1),
@@ -192,27 +189,30 @@ class _PermissionBranchState extends State<PermissionBranch> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "ยินดีต้อนรับสู่ แอปพลิเคชัน",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 24,
-                          color: Colors.white),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      "กรุณาเลือกเมนู ",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                          color: Color(0xffa29aac)),
-                    ),
-                  ],
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "ยินดีต้อนรับสู่ แอปพลิเคชัน",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24,
+                            color: Colors.white),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        "กรุณาเลือกเมนู ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Color(0xffa29aac)),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -230,7 +230,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                       ? Visibility(
                           visible: _visibleRead,
                           child: Card(
-                            color: const Color.fromRGBO(255, 230, 80, 1),
+                            color: HexColor('#EAC435'),
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(16))),
@@ -239,7 +239,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                               padding: const EdgeInsets.only(
                                   top: 10.0, bottom: 10.0),
                               decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(255, 230, 80, 1),
+                                  color: HexColor('#EAC435'),
                                   borderRadius: BorderRadius.circular(22.0)),
                               child: Row(
                                 children: [
@@ -269,8 +269,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                               ),
                                               DropdownButton(
                                                 dropdownColor:
-                                                    const Color.fromRGBO(
-                                                        255, 230, 80, 1),
+                                                    HexColor('#EAC435'),
                                                 icon: const Icon(
                                                     Icons.arrow_drop_down),
                                                 iconSize: 36.0,
@@ -289,7 +288,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                                   return DropdownMenuItem(
                                                     value: item['BranchID'],
                                                     child: Text(
-                                                      'สาขาที่ ${item['BranchID']}',
+                                                      'สาขาที่ ${item['BranchID'] == 901 ? 'HO' : item['BranchID']}',
                                                       style: const TextStyle(
                                                         fontSize: 25.0,
                                                         fontWeight:
@@ -340,7 +339,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                       : Visibility(
                           visible: _visibleRead,
                           child: Card(
-                            color: const Color.fromRGBO(255, 230, 80, 1),
+                            color: HexColor('#EAC435'),
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(16))),
@@ -365,8 +364,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                 padding: const EdgeInsets.only(
                                     top: 15.0, bottom: 15.0),
                                 decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(255, 230, 80, 1),
+                                    color: HexColor('#EAC435'),
                                     borderRadius: BorderRadius.circular(22.0)),
                                 child: Row(
                                   children: [
@@ -430,7 +428,14 @@ class _PermissionBranchState extends State<PermissionBranch> {
                         focusColor: const Color.fromRGBO(40, 59, 113, 1),
                         hoverColor: const Color.fromRGBO(40, 59, 113, 1),
                         onTap: () {
-                          checkQR();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ListAllAssets(
+                                branchPermission: userBranch ?? 0,
+                              ),
+                            ),
+                          );
                         },
                         splashColor: const Color.fromRGBO(40, 59, 113, 1),
                         child: Container(
@@ -449,7 +454,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                   size: 32.0,
                                 ),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -458,17 +463,17 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                       child: Column(
                                         children: [
                                           Text(
-                                            'เมนูสำหรับดูรายการทรัพย์สินทั้งหมด',
-                                            style: TextStyle(
+                                            'เมนูสำหรับดูรายการทรัพย์สินของ $userCode',
+                                            style: const TextStyle(
                                               color: Colors.black38,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          SizedBox(height: 4),
+                                          const SizedBox(height: 4),
                                           Text(
-                                            "รายการทรัพย์สินทั้งหมด",
+                                            "ทรัพย์สินทั้งหมดของ $userCode",
                                             textAlign: TextAlign.left,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 25.0,
                                               fontWeight: FontWeight.w500,
                                               color: Color.fromRGBO(
@@ -595,10 +600,12 @@ class _PermissionBranchState extends State<PermissionBranch> {
                 builder: (_) => CheckCode(
                   titleName: itemsResponse['Name'],
                   codeAssets: itemsResponse['Code'],
-                  detail: itemsResponse['detail'],
+                  detail: itemsResponse['detail'] ?? 'ยังไม่ได้ระบุสถานะ',
+                  ownerCode: itemsResponse['ownerCode'],
                   brachID: itemsResponse['BranchID'],
-                  images: itemsResponse['imagePath'].toString(),
-                  imagePath_2: itemsResponse['imagePath_2'].toString(),
+                  brachName: itemsResponse['BranchName'],
+                  images: itemsResponse['ImagePath'].toString(),
+                  imagePath_2: itemsResponse['ImagePath_2'].toString(),
                 ),
               ),
             );
@@ -652,10 +659,12 @@ class _PermissionBranchState extends State<PermissionBranch> {
                   builder: (_) => CheckCode(
                     titleName: itemsResponse['Name'],
                     codeAssets: itemsResponse['Code'],
-                    detail: itemsResponse['detail'],
+                    detail: itemsResponse['detail'] ?? 'ยังไม่ได้ระบุสถานะ',
+                    ownerCode: itemsResponse['ownerCode'],
                     brachID: itemsResponse['BranchID'],
-                    images: itemsResponse['imagePath'].toString(),
-                    imagePath_2: itemsResponse['imagePath_2'].toString(),
+                    brachName: itemsResponse['BranchName'],
+                    images: itemsResponse['ImagePath'].toString(),
+                    imagePath_2: itemsResponse['ImagePath_2'].toString(),
                   ),
                 ),
               );

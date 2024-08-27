@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fa_mobile_app/sceen/menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snippet_coder_utils/hex_color.dart';
 
 import '../config.dart';
 import 'package:http/http.dart' as http;
@@ -174,11 +175,13 @@ class _PeriodRoundState extends State<PeriodRound> {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
       child: Card(
+                    elevation: 4.0,
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16))),
         color: const Color.fromRGBO(40, 59, 113, 1),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(8.0),
           child: ListTile(
             onTap: () {
               Navigator.push(
@@ -209,10 +212,10 @@ class _PeriodRoundState extends State<PeriodRound> {
                 const SizedBox(height: 8),
                 Text(
                   'เวลา : $periodDatebegin - $periodDateend',
-                  style: const TextStyle(
+                  style:  TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: Colors.yellow),
+                      color: HexColor('#EAC435')),
                 ),
               ],
             ),

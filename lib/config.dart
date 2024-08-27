@@ -4,7 +4,7 @@ class Config {
   static const String appName = "แจ้งเตือน";
   // static const String appAssets = "Assets";
   // static const String apiURL = "192.168.220.1:32001"; //Ipconfig 49.0.64.71:32001
-  static const String apiURL = "10.20.100.29:32001";
+  static const String apiURL = "49.0.64.71:32001";
   static const String loginAPI = "/api/login"; //logins
   static const String profileAPI = "/api/users/:body"; //profile
   static const String assetsAPI = "/api/getAsset"; //CheckCode

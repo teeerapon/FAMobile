@@ -31,7 +31,7 @@ class _LohinSceenState extends State<LohinSceen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Version 1.0.3 (2024-02-05)',
+                'Version 2.0.0 (2024-08-26)',
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.black.withOpacity(0.6),

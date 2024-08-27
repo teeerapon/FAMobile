@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:snippet_coder_utils/hex_color.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 // ignore: must_be_immutable
 class CheckCode extends StatefulWidget {

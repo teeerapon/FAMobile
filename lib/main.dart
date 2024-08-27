@@ -1,15 +1,14 @@
 // ignore_for_file: unused_import
 
 import 'dart:async';
-
-import 'package:flutter_app_version_checker/flutter_app_version_checker.dart';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:fa_mobile_app/service/shared_service.dart';
 import 'package:fa_mobile_app/sceen/login_sceen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'sceen/permission_branch.dart';
-import 'sceen/false_update.dart';
-import 'package:new_version/new_version.dart';
-import 'package:fa_mobile_app/updatedialog.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 // Widget _defaultHome = const LohinSceen();
 Widget _defaultHome = const LohinSceen();
@@ -37,46 +36,11 @@ class _MyAppState extends State<MyApp> {
   bool isAPIcallProcess = false;
   GlobalKey<FormState> globalFormkey = GlobalKey<FormState>();
 
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     // Instantiate NewVersion manager object (Using GCP Console app as example)
-//     final newVersion = NewVersion(
-//       androidId: 'com.purethai.fa_mobile_app',
-//     );
-
-//     Timer(const Duration(milliseconds: 800), () {
-//       checkNewVersion(newVersion);
-//     });
-
-//     super.initState();
-//   }
-
-// void checkNewVersion(NewVersion newVersion) async {
-//     final status = await newVersion.getVersionStatus();
-//     if(status != null) {
-//       if(status.canUpdate) {
-//         showDialog(
-//           context: context,
-//           builder: (BuildContext context) {
-//             return UpdateDialog(
-//               allowDismissal: true,
-//               description: status.releaseNotes!,
-//               version: status.storeVersion,
-//               appLink: status.appStoreLink,
-//             );
-//           },
-//         );
-//         // newVersion.showUpdateDialog(
-//         //   context: context,
-//         //   versionStatus: status,
-//         //   dialogText: 'New Version is available in the store (${status.storeVersion}), update now!',
-//         //   dialogTitle: 'Update is Available!',
-//         // );
-//       }
-//     }
-//   }
+  @override
+  void initState() {
+    super.initState();
+    checkForUpdate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,5 +56,64 @@ class _MyAppState extends State<MyApp> {
         '/permission_branch': (context) => const PermissionBranch(),
       },
     );
+  }
+
+  Future<void> checkForUpdate() async {
+    try {
+      // ตรวจสอบข้อมูลเวอร์ชันแอปจาก PackageInfo
+      final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      final String currentVersion = packageInfo.version;
+
+      // ตรวจสอบการอัปเดตแอป
+      AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        // เปรียบเทียบเวอร์ชัน
+        if (currentVersion != updateInfo.availableVersionCode.toString()) {
+          showUpdateDialog();
+        }
+      }
+    } catch (e) {
+      log("Failed to check for updates: $e");
+    }
+  }
+
+  void showUpdateDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Available'),
+          content: const Text(
+              'A new version of the app is available. Please update to the latest version.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Later'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                redirectToPlayStore();
+              },
+              child: const Text('Update Now'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void redirectToPlayStore() async {
+    const playStoreUrl =
+        'https://play.google.com/store/apps/details?id=com.purethai.fa_mobile_app';
+    if (await canLaunchUrl(Uri.parse(playStoreUrl))) {
+      await launchUrl(Uri.parse(playStoreUrl),
+          mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $playStoreUrl';
+    }
   }
 }

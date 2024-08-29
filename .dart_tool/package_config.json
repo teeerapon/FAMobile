@@ -26,6 +26,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "auto_size_text",
+      "rootUri": "file:///C:/Users/tps/AppData/Local/Pub/Cache/hosted/pub.dev/auto_size_text-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "bloc",
       "rootUri": "file:///C:/Users/tps/AppData/Local/Pub/Cache/hosted/pub.dev/bloc-8.1.4",
       "packageUri": "lib/",
@@ -692,7 +698,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-08-27T11:19:28.753041Z",
+  "generated": "2024-08-29T07:29:42.665760Z",
   "generator": "pub",
   "generatorVersion": "3.5.1",
   "flutterRoot": "file:///C:/src/flutter",

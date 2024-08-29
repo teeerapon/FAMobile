@@ -24,6 +24,7 @@ class _LohinSceenState extends State<LohinSceen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -33,7 +34,7 @@ class _LohinSceenState extends State<LohinSceen> {
               Text(
                 'Version 2.0.0 (2024-08-26)',
                 style: TextStyle(
-                    fontSize: 14,
+                    fontSize: screenWidth * 0.035,
                     color: Colors.black.withOpacity(0.6),
                     fontWeight: FontWeight.w500),
               ),
@@ -58,6 +59,7 @@ class _LohinSceenState extends State<LohinSceen> {
   }
 
   Widget _loginUI(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -97,14 +99,14 @@ class _LohinSceenState extends State<LohinSceen> {
           const SizedBox(
             height: 10,
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 35, bottom: 20, top: 30),
+          Padding(
+            padding: const EdgeInsets.only(left: 35, bottom: 20, top: 30),
             child: Text(
               "ล็อกอินเพื่อเข้าสู่ระบบ",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   //fontStyle: FontStyle.italic,
-                  fontSize: 24,
+                  fontSize: screenWidth * 0.05,
                   color: Colors.white),
             ),
           ),
@@ -177,7 +179,7 @@ class _LohinSceenState extends State<LohinSceen> {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.grey.withOpacity(0.6),
-                    fontSize: 16.0,
+                    fontSize: screenWidth * 0.05,
                   ),
                 ),
               ),
@@ -227,7 +229,7 @@ class _LohinSceenState extends State<LohinSceen> {
                 borderRadius: 10,
                 txtColor: Colors.white,
                 fontWeight: FontWeight.w500,
-                fontSize: 18,
+                fontSize: screenWidth * 0.05,
               ),
             ),
           ),
@@ -242,13 +244,16 @@ class _LohinSceenState extends State<LohinSceen> {
                 Text(
                   'จำรหัสผ่านไม่ได้ ? กรุณาติดต่อ',
                   style: TextStyle(
-                      color: Colors.grey[600], fontWeight: FontWeight.w500),
+                      fontSize: screenWidth * 0.035,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500),
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('IT support',
+                  child: Text('IT support',
                       style: TextStyle(
-                        color: Color.fromRGBO(255, 46, 140, 1),
+                        fontSize: screenWidth * 0.035,
+                        color: const Color.fromRGBO(255, 46, 140, 1),
                       )),
                 ),
               ],

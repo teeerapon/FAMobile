@@ -23,10 +23,10 @@ class TestAsset extends StatefulWidget {
   final int branchPermission;
   final String dateTimeNow;
   const TestAsset({
-    Key? key,
+    super.key,
     required this.branchPermission,
     required this.dateTimeNow,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api
@@ -124,6 +124,7 @@ class _TestAssetState extends State<TestAsset> {
   }
 
   Widget _scanner(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     List<dynamic> listImage = [imagePath, imagePath_2];
     List<dynamic> radioListOptions = [
       'ไม่ได้ระบุสถานะ',
@@ -188,27 +189,27 @@ class _TestAssetState extends State<TestAsset> {
             ),
           ),
           const SizedBox(height: 30),
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(left: 35, right: 16),
+                padding: const EdgeInsets.only(left: 35, right: 16),
                 child: Text(
                   'กดที่ สแกน QR CODE',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24.0,
+                      fontSize: screenWidth * 0.06,
                       fontWeight: FontWeight.w500),
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Padding(
-                padding: EdgeInsets.only(left: 35, right: 16),
+                padding: const EdgeInsets.only(left: 35, right: 16),
                 child: Text(
                   'เพื่อทำการเปิดกล้อง',
                   style: TextStyle(
-                      color: Color(0xffa29aac),
-                      fontSize: 20.0,
+                      color: const Color(0xffa29aac),
+                      fontSize: screenWidth * 0.05,
                       fontWeight: FontWeight.w500),
                 ),
               ),
@@ -228,6 +229,9 @@ class _TestAssetState extends State<TestAsset> {
                   focusColor: const Color.fromRGBO(40, 59, 113, 1),
                   hoverColor: const Color.fromRGBO(40, 59, 113, 1),
                   onTap: () {
+                    setState(() {
+                      listImage = ['', ''];
+                    });
                     startScan();
                   },
                   splashColor: const Color.fromRGBO(45, 69, 135, 1),
@@ -247,7 +251,7 @@ class _TestAssetState extends State<TestAsset> {
                             size: 40.0,
                           ),
                         ),
-                        const Expanded(
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -257,16 +261,20 @@ class _TestAssetState extends State<TestAsset> {
                                   children: <Widget>[
                                     Text(
                                       'สแกนนับทรัพย์สินและการทำบันทึก',
-                                      style: TextStyle(color: Colors.black38),
+                                      style: TextStyle(
+                                        color: Colors.black38,
+                                        fontSize: screenWidth * 0.035,
+                                      ),
                                     ),
-                                    SizedBox(height: 4),
+                                    const SizedBox(height: 4),
                                     Text(
                                       "สแกน QR CODE",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
-                                        fontSize: 28.0,
+                                        fontSize: screenWidth * 0.06,
                                         fontWeight: FontWeight.w500,
-                                        color: Color.fromRGBO(40, 59, 113, 1),
+                                        color: const Color.fromRGBO(
+                                            40, 59, 113, 1),
                                       ),
                                     ),
                                   ],
@@ -385,46 +393,46 @@ class _TestAssetState extends State<TestAsset> {
                           children: <Widget>[
                             Text(
                               nameController ?? '',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   //fontStyle: FontStyle.italic,
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   color: Colors.black),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               "รหัสทรัพย์สิน: ${codeController ?? ''}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   //fontStyle: FontStyle.italic,
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   color: Colors.black),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               "สาขา: ${branchController ?? ''}",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   //fontStyle: FontStyle.italic,
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   color: Colors.black),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               "วันที่บันทึก: $assetDate",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   //fontStyle: FontStyle.italic,
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   color: Colors.black),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'สถานะครั้งนี้ :  $selectedValue',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   //fontStyle: FontStyle.italic,
-                                  fontSize: 18,
+                                  fontSize: screenWidth * 0.043,
                                   color: Colors.black),
                             ),
                           ]),
@@ -455,7 +463,14 @@ class _TestAssetState extends State<TestAsset> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: radioListOptions.map((option) {
                             return RadioListTile<String>(
-                              title: Text(option),
+                              title: Text(
+                                option,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    //fontStyle: FontStyle.italic,
+                                    fontSize: screenWidth * 0.043,
+                                    color: Colors.black),
+                              ),
                               value: option,
                               groupValue: selectedValue,
                               onChanged: editDetail,
@@ -508,7 +523,6 @@ class _TestAssetState extends State<TestAsset> {
 
       // ดึงค่าของ ATT
       if (jsonData['attach'] != null && jsonData['attach'].isNotEmpty) {
-        
         String attValue = jsonData['attach'][0]['ATT'];
         String extension = jsonData['extension'];
         SharedPreferences roundid = await SharedPreferences.getInstance();
@@ -517,8 +531,7 @@ class _TestAssetState extends State<TestAsset> {
         Map<String, String> requestHeaders = {
           'Content-Type': 'application/json; charset=utf-8',
         };
-
-        await client.post(
+        var responseImg = await client.post(
           url,
           headers: requestHeaders,
           body: jsonEncode({
@@ -529,6 +542,12 @@ class _TestAssetState extends State<TestAsset> {
                 "http://vpnptec.dyndns.org:33080/NEW_NAC/$attValue.$extension",
           }),
         );
+        if (responseImg.statusCode == 200) {
+          FormHelper.showSimpleAlertDialog(
+              context, Config.appName, 'บันทึกรูปภาพสำเร็จ', "ยอมรับ", () {
+            Navigator.pop(context);
+          });
+        }
       }
     } else {
       log('Failed to upload image. Status code: ${response.statusCode}');
@@ -567,6 +586,7 @@ class _TestAssetState extends State<TestAsset> {
   Future<void> startScan() async {
     setState(() {
       _visible = false;
+      selectedValue = 'ไม่ได้ระบุสถานะ';
     });
     SharedPreferences pref = await SharedPreferences.getInstance();
     SharedPreferences roundid = await SharedPreferences.getInstance();
@@ -758,15 +778,14 @@ class _TestAssetState extends State<TestAsset> {
               }
             } else {
               dynamic itemsResponse = jsonDecode(response.body);
-              log(itemsResponse);
-              // FormHelper.showSimpleAlertDialog(
-              //     context,
-              //     Config.appName,
-              //     itemsResponse['message'].toString() +
-              //         itemsResponse['data'].toString(),
-              //     "ยอมรับ", () {
-              //   Navigator.pop(context);
-              // });
+              FormHelper.showSimpleAlertDialog(
+                  context,
+                  Config.appName,
+                  itemsResponse['message'].toString() +
+                      itemsResponse['data'].toString(),
+                  "ยอมรับ", () {
+                Navigator.pop(context);
+              });
             }
           } else {
             FormHelper.showSimpleAlertDialog(

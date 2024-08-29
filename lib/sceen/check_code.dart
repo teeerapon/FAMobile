@@ -73,6 +73,7 @@ class _CheckCodeState extends State<CheckCode> {
   }
 
   Widget assetsReported() {
+    double screenWidth = MediaQuery.of(context).size.width;
     List<dynamic> listImage = [widget.images, widget.imagePath_2];
     return SingleChildScrollView(
       child: Column(
@@ -184,10 +185,10 @@ class _CheckCodeState extends State<CheckCode> {
                           top: 8.0, left: 8.0, right: 8.0),
                       child: Text(
                         widget.codeAssets,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
                             //fontStyle: FontStyle.italic,
-                            fontSize: 20,
+                            fontSize: screenWidth * 0.05,
                             color: Colors.black),
                       ),
                     ),
@@ -201,118 +202,6 @@ class _CheckCodeState extends State<CheckCode> {
                       ),
                     ),
                     ListTile(
-                      onTap: () {
-                        // แสดง AlertDialog เมื่อกดที่ Card
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxHeight: MediaQuery.of(context)
-                                          .size
-                                          .height *
-                                      0.5, // กำหนดความสูงสูงสุดให้ AlertDialog
-                                ),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.codeAssets,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            //fontStyle: FontStyle.italic,
-                                            fontSize: 28,
-                                            color: Colors.black),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const Divider(
-                                        color: Colors.black,
-                                        thickness: 1,
-                                        height: 20,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        widget.titleName,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
-                                            color: Colors.black),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'ผู้ถือครองทรัพย์สิน :  ${widget.ownerCode}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
-                                            color: Colors.black),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'สาขาที่อยู่ของทรัพย์สิน :  ${widget.brachName} (${widget.brachID})',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
-                                            color: Colors.black),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      const Divider(
-                                        color: Colors.black,
-                                        thickness: 1,
-                                        height: 20,
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Text(
-                                          'สถานะล่าสุด :  ${widget.detail ?? 'ยังไม่ได้ระบุสถานะภาพ'}',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              //fontStyle: FontStyle.italic,
-                                              fontSize: 18,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    // ปิด AlertDialog
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text(
-                                    'ปิด',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        //fontStyle: FontStyle.italic,
-                                        fontSize: 18),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
                       title: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Column(
@@ -321,31 +210,32 @@ class _CheckCodeState extends State<CheckCode> {
                             SizedBox(
                               width: 280,
                               child: Text(widget.titleName,
-                                  style: const TextStyle(
-                                      fontSize: 16,
+                                  style: TextStyle(
+                                      fontSize: screenWidth * 0.043,
                                       fontWeight: FontWeight.w500,
-                                      color: Color.fromRGBO(13, 209, 13, 1))),
+                                      color: const Color.fromRGBO(
+                                          13, 209, 13, 1))),
                             ),
                             const SizedBox(height: 8),
                             Text('รหัสทรัพย์สิน : ${widget.codeAssets}',
                                 style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: screenWidth * 0.043,
                                     fontWeight: FontWeight.w500,
                                     color: HexColor('#EAC435'))),
                             const SizedBox(height: 8),
                             Text(
                               'ผู้ถือครองทรัพย์สิน :  ${widget.ownerCode}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   //fontStyle: FontStyle.italic,
-                                  fontSize: 18,
+                                  fontSize: screenWidth * 0.043,
                                   color: Colors.black),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'สาขา : ${widget.brachName} (${widget.brachID})',
-                              style: const TextStyle(
-                                  fontSize: 16,
+                              style: TextStyle(
+                                  fontSize: screenWidth * 0.043,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black),
                             ),
@@ -353,10 +243,10 @@ class _CheckCodeState extends State<CheckCode> {
                               scrollDirection: Axis.horizontal,
                               child: Text(
                                 'สถานะล่าสุด :  ${widget.detail ?? 'ยังไม่ได้ระบุสถานะภาพ'}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     //fontStyle: FontStyle.italic,
-                                    fontSize: 18,
+                                    fontSize: screenWidth * 0.043,
                                     color: Colors.black),
                               ),
                             ),

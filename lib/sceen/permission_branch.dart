@@ -102,15 +102,16 @@ class _PermissionBranchState extends State<PermissionBranch> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           title: Text(
             // ignore: prefer_interpolation_to_compose_strings
             "Initial: $userCode (${userBranch == 901 ? "HO" : userBranch})",
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color.fromRGBO(40, 59, 113, 1),
+            style: TextStyle(
+              fontSize: screenWidth * 0.035,
+              color: const Color.fromRGBO(40, 59, 113, 1),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -145,6 +146,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
   }
 
   Widget _detail() {
+    double screenWidth = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -184,8 +186,8 @@ class _PermissionBranchState extends State<PermissionBranch> {
           const SizedBox(
             height: 40,
           ),
-          const Padding(
-            padding: EdgeInsets.only(left: 35, bottom: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 35, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -198,18 +200,18 @@ class _PermissionBranchState extends State<PermissionBranch> {
                         "ยินดีต้อนรับสู่ แอปพลิเคชัน",
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 24,
+                            fontSize: screenWidth * 0.06,
                             color: Colors.white),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 4,
                       ),
                       Text(
                         "กรุณาเลือกเมนู ",
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Color(0xffa29aac)),
+                            fontSize: screenWidth * 0.05,
+                            color: const Color(0xffa29aac)),
                       ),
                     ],
                   ),
@@ -260,9 +262,10 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                           alignment: Alignment.centerLeft,
                                           child: Column(
                                             children: [
-                                              const Text(
+                                              Text(
                                                 'เลือกสาขาเพื่อระบุสาขาของเมนูถัดไป',
                                                 style: TextStyle(
+                                                  fontSize: screenWidth * 0.035,
                                                   color: Colors.black38,
                                                   fontWeight: FontWeight.w500,
                                                 ),
@@ -272,14 +275,15 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                                     HexColor('#EAC435'),
                                                 icon: const Icon(
                                                     Icons.arrow_drop_down),
-                                                iconSize: 36.0,
+                                                iconSize: screenWidth * 0.06,
                                                 underline: const SizedBox(),
-                                                hint: const Text(
+                                                hint: Text(
                                                   'นับทรัพย์สิน',
                                                   style: TextStyle(
-                                                    fontSize: 25.0,
+                                                    fontSize:
+                                                        screenWidth * 0.06,
                                                     fontWeight: FontWeight.w500,
-                                                    color: Color.fromRGBO(
+                                                    color: const Color.fromRGBO(
                                                         40, 59, 113, 1),
                                                   ),
                                                 ),
@@ -289,11 +293,13 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                                     value: item['BranchID'],
                                                     child: Text(
                                                       'สาขาที่ ${item['BranchID'] == 901 ? 'HO' : item['BranchID']}',
-                                                      style: const TextStyle(
-                                                        fontSize: 25.0,
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            screenWidth * 0.06,
                                                         fontWeight:
                                                             FontWeight.w500,
-                                                        color: Color.fromRGBO(
+                                                        color: const Color
+                                                            .fromRGBO(
                                                             40, 59, 113, 1),
                                                       ),
                                                     ),
@@ -376,7 +382,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                         size: 32.0,
                                       ),
                                     ),
-                                    const Expanded(
+                                    Expanded(
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
@@ -388,18 +394,21 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                                 Text(
                                                   'สแกนเพื่อตรวจสอบข้อมูลทรัพย์สิน',
                                                   style: TextStyle(
+                                                    fontSize:
+                                                        screenWidth * 0.035,
                                                     color: Colors.black38,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                                SizedBox(height: 4),
+                                                const SizedBox(height: 4),
                                                 Text(
                                                   "นับทรัพย์สิน",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    fontSize: 25.0,
+                                                    fontSize:
+                                                        screenWidth * 0.06,
                                                     fontWeight: FontWeight.w500,
-                                                    color: Color.fromRGBO(
+                                                    color: const Color.fromRGBO(
                                                         40, 59, 113, 1),
                                                   ),
                                                 ),
@@ -464,7 +473,8 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                         children: [
                                           Text(
                                             'เมนูสำหรับดูรายการทรัพย์สินของ $userCode',
-                                            style: const TextStyle(
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.035,
                                               color: Colors.black38,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -473,10 +483,10 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                           Text(
                                             "ทรัพย์สินทั้งหมดของ $userCode",
                                             textAlign: TextAlign.left,
-                                            style: const TextStyle(
-                                              fontSize: 25.0,
+                                            style: TextStyle(
+                                              fontSize: screenWidth * 0.06,
                                               fontWeight: FontWeight.w500,
-                                              color: Color.fromRGBO(
+                                              color: const Color.fromRGBO(
                                                   40, 59, 113, 1),
                                             ),
                                           ),
@@ -524,7 +534,7 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                   size: 32.0,
                                 ),
                               ),
-                              const Expanded(
+                              Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -535,18 +545,19 @@ class _PermissionBranchState extends State<PermissionBranch> {
                                           Text(
                                             'สแกนเพื่อตรวจสอบข้อมูลทรัพย์สิน',
                                             style: TextStyle(
+                                              fontSize: screenWidth * 0.035,
                                               color: Colors.black38,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          SizedBox(height: 4),
+                                          const SizedBox(height: 4),
                                           Text(
                                             "ตรวจสอบ QR Code",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              fontSize: 25.0,
+                                              fontSize: screenWidth * 0.06,
                                               fontWeight: FontWeight.w500,
-                                              color: Color.fromRGBO(
+                                              color: const Color.fromRGBO(
                                                   40, 59, 113, 1),
                                             ),
                                           ),

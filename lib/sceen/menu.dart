@@ -108,14 +108,15 @@ class _ScannerState extends State<Scanner> {
           key: UniqueKey(),
           child: Form(
             key: globaAssetsFormkey,
-            child: _detail(),
+            child: _detail(context),
           ),
         ),
       ),
     );
   }
 
-  Widget _detail() {
+  Widget _detail(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,17 +167,17 @@ class _ScannerState extends State<Scanner> {
                     children: <Widget>[
                       Text(
                         "กำลังใช้งานเมนู${widget.brachID == 901 ? "สำนักงาน HO" : "ที่สาขา ${widget.brachID}"}",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 24,
+                            fontSize: screenWidth * 0.06,
                             color: Colors.white),
                       ),
-                      const Text(
+                      Text(
                         "กรุณาเลือกเมนู",
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                            color: Color(0xffa29aac)),
+                            fontSize: screenWidth * 0.05,
+                            color: const Color(0xffa29aac)),
                       ),
                       const SizedBox(
                         height: 4,
@@ -250,19 +251,20 @@ class _ScannerState extends State<Scanner> {
                                           children: [
                                             Text(
                                               'สแกนเพื่อนับทรัพย์สิน ${widget.brachID == 901 ? "HO" : widget.brachID}',
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 color: Colors.black38,
                                                 fontWeight: FontWeight.w500,
+                                                fontSize: screenWidth * 0.04,
                                               ),
                                             ),
                                             const SizedBox(height: 4),
-                                            const Text(
+                                            Text(
                                               "สแกน QR CODE",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
-                                                fontSize: 25.0,
+                                                fontSize: screenWidth * 0.06,
                                                 fontWeight: FontWeight.w500,
-                                                color: Color.fromRGBO(
+                                                color: const Color.fromRGBO(
                                                     40, 59, 113, 1),
                                               ),
                                             ),
@@ -327,19 +329,20 @@ class _ScannerState extends State<Scanner> {
                                         children: [
                                           Text(
                                             'แสดงรายงานทรัพย์สินสาขา ${widget.brachID}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               color: Colors.black38,
+                                              fontSize: screenWidth * 0.04,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
-                                          const Text(
+                                          Text(
                                             "รายงานทรัพย์สิน",
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              fontSize: 25.0,
+                                              fontSize: screenWidth * 0.06,
                                               fontWeight: FontWeight.w500,
-                                              color: Color.fromRGBO(
+                                              color: const Color.fromRGBO(
                                                   40, 59, 113, 1),
                                             ),
                                           ),

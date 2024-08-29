@@ -77,11 +77,13 @@ class _PeriodRoundState extends State<PeriodRound> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Periods',
           style: TextStyle(
+            fontSize: screenWidth * 0.05,
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -160,6 +162,7 @@ class _PeriodRoundState extends State<PeriodRound> {
   }
 
   Widget get_Item_period(index) {
+    double screenWidth = MediaQuery.of(context).size.width;
     var periodRound = index['PeriodID'];
     var beginDate = index['BeginDate'];
     var endDate = index['EndDate'];
@@ -175,8 +178,8 @@ class _PeriodRoundState extends State<PeriodRound> {
     return Padding(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
       child: Card(
-                    elevation: 4.0,
-            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        elevation: 4.0,
+        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16))),
         color: const Color.fromRGBO(40, 59, 113, 1),
@@ -203,17 +206,17 @@ class _PeriodRoundState extends State<PeriodRound> {
                   scrollDirection: Axis.horizontal,
                   child: Text(
                     '$description',
-                    style: const TextStyle(
-                        fontSize: 18,
+                    style: TextStyle(
+                        fontSize: screenWidth * 0.043,
                         fontWeight: FontWeight.w500,
                         color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'เวลา : $periodDatebegin - $periodDateend',
-                  style:  TextStyle(
-                      fontSize: 14,
+                  '$periodDatebegin - $periodDateend',
+                  style: TextStyle(
+                      fontSize: screenWidth * 0.04,
                       fontWeight: FontWeight.w500,
                       color: HexColor('#EAC435')),
                 ),

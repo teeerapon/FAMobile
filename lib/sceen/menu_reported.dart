@@ -170,6 +170,7 @@ class _ViewDetailsState extends State<ViewDetails> {
   }
 
   Widget _fixassets(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     List<dynamic> filteredAssets = _filterAssets(assets);
     List<dynamic> radioListOptions = [
       'สภาพดี',
@@ -277,10 +278,10 @@ class _ViewDetailsState extends State<ViewDetails> {
                         // Widget ที่ชิดซ้าย
                         Text(
                           filteredAssets[index]['Code'],
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.w500,
                               //fontStyle: FontStyle.italic,
-                              fontSize: 20,
+                              fontSize: screenWidth * 0.05,
                               color: Colors.white),
                         ),
                         // Spacer เพื่อเพิ่มช่องว่าง
@@ -404,100 +405,107 @@ class _ViewDetailsState extends State<ViewDetails> {
                                     0.5, // กำหนดความสูงสูงสุดให้ AlertDialog
                               ),
                               child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Divider(
-                                      color: Colors.black,
-                                      thickness: 1,
-                                      height: 20,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      filteredAssets[index]['Name'],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
-                                          color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'สาขาที่อยู่ของทรัพย์สิน :  ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
-                                          color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    const Divider(
-                                      color: Colors.black,
-                                      thickness: 1,
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      'บันทึกโดย :  $userID',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
-                                          color: Colors.black),
-                                    ),
-                                    Text(
-                                      'สาขาที่ทำการบันทึก :  ${filteredAssets[index]['UserBranch']}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
-                                          color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'วันที่บันทึก :  ${assetDate.toString()}',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
-                                          color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                        'สถานะล่าสุด :  ${filteredAssets[index]['detail'] ?? ''}',
-                                        style: const TextStyle(
+                                child: Center(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        filteredAssets[index]['Code'],
+                                        style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
+                                            fontSize: screenWidth * 0.05,
                                             color: Colors.black),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Text(
-                                        'สถานะครั้งนี้ :  ${filteredAssets[index]['Reference']}',
-                                        style: const TextStyle(
+                                      const Divider(
+                                        color: Colors.black,
+                                        thickness: 1,
+                                        height: 20,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        filteredAssets[index]['Name'],
+                                        style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
+                                            fontSize: screenWidth * 0.043,
                                             color: Colors.black),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        'สาขาที่อยู่ของทรัพย์สิน :  ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            //fontStyle: FontStyle.italic,
+                                            fontSize: screenWidth * 0.043,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        'ผู้ถือครองทรัพย์สิน :  ${filteredAssets[index]['OwnerID']}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            //fontStyle: FontStyle.italic,
+                                            fontSize: screenWidth * 0.043,
+                                            color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      const Divider(
+                                        color: Colors.black,
+                                        thickness: 1,
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        'ผู้บันทึก :  ${filteredAssets[index]['UserID']}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            //fontStyle: FontStyle.italic,
+                                            fontSize: screenWidth * 0.043,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        'สาขาที่ทำการบันทึก :  ${filteredAssets[index]['UserBranch']}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            //fontStyle: FontStyle.italic,
+                                            fontSize: screenWidth * 0.043,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        'วันที่บันทึก :  ${assetDate.toString()}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            //fontStyle: FontStyle.italic,
+                                            fontSize: screenWidth * 0.043,
+                                            color: Colors.black),
+                                      ),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Text(
+                                          'สถานะล่าสุด :  ${filteredAssets[index]['detail'] ?? ''}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              //fontStyle: FontStyle.italic,
+                                              fontSize: screenWidth * 0.043,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Text(
+                                          'สถานะครั้งนี้ :  ${filteredAssets[index]['Reference']}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              //fontStyle: FontStyle.italic,
+                                              fontSize: screenWidth * 0.043,
+                                              color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -525,39 +533,33 @@ class _ViewDetailsState extends State<ViewDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(
-                            width: 280,
-                            child: Text(filteredAssets[index]['Name'],
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromRGBO(13, 209, 13, 1))),
-                          ),
+                          Text(filteredAssets[index]['Name'],
+                              style: TextStyle(
+                                  fontSize: screenWidth * 0.043,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color.fromRGBO(13, 209, 13, 1))),
                           const SizedBox(height: 8),
                           Text(
                               'รหัสทรัพย์สิน : ${filteredAssets[index]['Code']}',
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   fontWeight: FontWeight.w500,
                                   color: HexColor('#EAC435'))),
                           const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                  'สาขา : ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white)),
-                              const SizedBox(width: 10),
-                              Text('วันที่บันทึก : $assetDate',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white)),
-                            ],
+                          Text(
+                            'ผู้บันทึก :  ${filteredAssets[index]['UserID']} [${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})]',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                //fontStyle: FontStyle.italic,
+                                fontSize: screenWidth * 0.043,
+                                color: Colors.white),
                           ),
+                          const SizedBox(height: 8),
+                          Text('วันที่บันทึก : $assetDate',
+                              style: TextStyle(
+                                  fontSize: screenWidth * 0.043,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
                           const SizedBox(height: 8),
                           SizedBox(
                             width: 280,
@@ -568,7 +570,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     //fontStyle: FontStyle.italic,
-                                    fontSize: 16,
+                                    fontSize: screenWidth * 0.043,
                                     color: filteredAssets[index]['Reference'] ==
                                             'ไม่ได้ระบุสถานะ'
                                         ? Colors.red
@@ -693,7 +695,7 @@ class _ViewDetailsState extends State<ViewDetails> {
 
   Widget _fixassets3(BuildContext context) {
     // asset3
-
+    double screenWidth = MediaQuery.of(context).size.width;
     List<dynamic> filteredAssets = _filterAssets(assets3);
     List<dynamic> radioListOptions = [
       'สภาพดี',
@@ -933,14 +935,11 @@ class _ViewDetailsState extends State<ViewDetails> {
                                   children: [
                                     Text(
                                       filteredAssets[index]['Code'],
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 28,
+                                          fontSize: screenWidth * 0.05,
                                           color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
                                     ),
                                     const Divider(
                                       color: Colors.black,
@@ -952,21 +951,26 @@ class _ViewDetailsState extends State<ViewDetails> {
                                     ),
                                     Text(
                                       filteredAssets[index]['Name'],
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
+                                          fontSize: screenWidth * 0.043,
                                           color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
                                     ),
                                     Text(
                                       'สาขาที่อยู่ของทรัพย์สิน :  ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
+                                          fontSize: screenWidth * 0.043,
+                                          color: Colors.black),
+                                    ),
+                                    Text(
+                                      'ผู้ถือครองทรัพย์สิน :  ${filteredAssets[index]['OwnerID']}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          //fontStyle: FontStyle.italic,
+                                          fontSize: screenWidth * 0.043,
                                           color: Colors.black),
                                     ),
                                     const SizedBox(
@@ -978,57 +982,48 @@ class _ViewDetailsState extends State<ViewDetails> {
                                       height: 20,
                                     ),
                                     Text(
-                                      'บันทึกโดย :  $userID',
-                                      style: const TextStyle(
+                                      'ผู้บันทึก :  ${filteredAssets[index]['UserID']}',
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
+                                          fontSize: screenWidth * 0.043,
                                           color: Colors.black),
                                     ),
                                     Text(
                                       'สาขาที่ทำการบันทึก :  ${filteredAssets[index]['UserBranch']}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
+                                          fontSize: screenWidth * 0.043,
                                           color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
                                     ),
                                     Text(
                                       'วันที่บันทึก :  ${assetDate.toString()}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
+                                          fontSize: screenWidth * 0.043,
                                           color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
                                     ),
                                     SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Text(
                                         'สถานะล่าสุด :  ${filteredAssets[index]['detail'] ?? ''}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
+                                            fontSize: screenWidth * 0.043,
                                             color: Colors.black),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
                                     ),
                                     SingleChildScrollView(
                                       scrollDirection: Axis.horizontal,
                                       child: Text(
                                         'สถานะครั้งนี้ :  ${filteredAssets[index]['Reference']}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
+                                            fontSize: screenWidth * 0.043,
                                             color: Colors.black),
                                       ),
                                     ),
@@ -1060,39 +1055,33 @@ class _ViewDetailsState extends State<ViewDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(
-                            width: 280,
-                            child: Text(filteredAssets[index]['Name'],
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromRGBO(13, 209, 13, 1))),
-                          ),
+                          Text(filteredAssets[index]['Name'],
+                              style: TextStyle(
+                                  fontSize: screenWidth * 0.043,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color.fromRGBO(13, 209, 13, 1))),
                           const SizedBox(height: 8),
                           Text(
                               'รหัสทรัพย์สิน : ${filteredAssets[index]['Code']}',
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   fontWeight: FontWeight.w500,
                                   color: HexColor('#EAC435'))),
                           const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                  'สาขา : ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white)),
-                              const SizedBox(width: 10),
-                              Text('วันที่บันทึก : $assetDate',
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white)),
-                            ],
+                          Text(
+                            'ผู้บันทึก :  ${filteredAssets[index]['UserID']} [${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})]',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                //fontStyle: FontStyle.italic,
+                                fontSize: screenWidth * 0.043,
+                                color: Colors.white),
                           ),
+                          const SizedBox(height: 8),
+                          Text('วันที่บันทึก : $assetDate',
+                              style: TextStyle(
+                                  fontSize: screenWidth * 0.043,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white)),
                           const SizedBox(height: 8),
                           SizedBox(
                             width: 280,
@@ -1103,7 +1092,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     //fontStyle: FontStyle.italic,
-                                    fontSize: 16,
+                                    fontSize: screenWidth * 0.043,
                                     color: filteredAssets[index]['Reference'] ==
                                             'ไม่ได้ระบุสถานะ'
                                         ? Colors.red
@@ -1125,6 +1114,7 @@ class _ViewDetailsState extends State<ViewDetails> {
   }
 
   Widget _fixassets2(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     List<dynamic> filteredAssets = _filterAssets(assets2);
     List<dynamic> radioListOptions = [
       'สภาพดี',
@@ -1228,10 +1218,10 @@ class _ViewDetailsState extends State<ViewDetails> {
                         // Widget ที่ชิดซ้าย
                         Text(
                           filteredAssets[index]['Code'],
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.w500,
                               //fontStyle: FontStyle.italic,
-                              fontSize: 20,
+                              fontSize: screenWidth * 0.05,
                               color: Colors.white),
                         ),
                         // Spacer เพื่อเพิ่มช่องว่าง
@@ -1454,15 +1444,20 @@ class _ViewDetailsState extends State<ViewDetails> {
                                           fontSize: 18,
                                           color: Colors.black),
                                     ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
                                     Text(
                                       'สาขาที่อยู่ของทรัพย์สิน :  ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           //fontStyle: FontStyle.italic,
-                                          fontSize: 18,
+                                          fontSize: screenWidth * 0.05,
+                                          color: Colors.black),
+                                    ),
+                                    Text(
+                                      'ผู้ถือครองทรัพย์สิน :  ${filteredAssets[index]['OwnerID']}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          //fontStyle: FontStyle.italic,
+                                          fontSize: screenWidth * 0.043,
                                           color: Colors.black),
                                     ),
                                     const SizedBox(
@@ -1480,10 +1475,10 @@ class _ViewDetailsState extends State<ViewDetails> {
                                       scrollDirection: Axis.horizontal,
                                       child: Text(
                                         'สถานะล่าสุด :  ${filteredAssets[index]['detail'] ?? 'ยังไม่ได้ระบุ'}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             //fontStyle: FontStyle.italic,
-                                            fontSize: 18,
+                                            fontSize: screenWidth * 0.043,
                                             color: Colors.black),
                                       ),
                                     ),
@@ -1515,33 +1510,26 @@ class _ViewDetailsState extends State<ViewDetails> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(
-                            width: 280,
-                            child: Text(filteredAssets[index]['Name'],
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromRGBO(13, 209, 13, 1))),
-                          ),
+                          Text(filteredAssets[index]['Name'],
+                              style: TextStyle(
+                                  fontSize: screenWidth * 0.043,
+                                  fontWeight: FontWeight.w500,
+                                  color: const Color.fromRGBO(13, 209, 13, 1))),
                           const SizedBox(height: 8),
                           Text(
                               'รหัสทรัพย์สิน : ${filteredAssets[index]['Code']}',
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: screenWidth * 0.043,
                                   fontWeight: FontWeight.w500,
                                   color: HexColor('#EAC435'))),
                           const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'สาขา : ${filteredAssets[index]['BranchName']} (${filteredAssets[index]['BranchID']})',
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ],
+                          Text(
+                            'ผู้บันทึก :  ยังไม่ได้บันทึก',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                //fontStyle: FontStyle.italic,
+                                fontSize: screenWidth * 0.043,
+                                color: Colors.white),
                           ),
                           const SizedBox(height: 8),
                           SizedBox(
@@ -1553,7 +1541,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     //fontStyle: FontStyle.italic,
-                                    fontSize: 16,
+                                    fontSize: screenWidth * 0.043,
                                     color: filteredAssets[index]['Reference'] ==
                                             'ไม่ได้ระบุสถานะ'
                                         ? Colors.red
